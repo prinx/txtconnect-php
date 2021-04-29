@@ -172,7 +172,7 @@ class PhoneNumberUtils
             return self::PLUS.$number;
         }
 
-        $number;
+        return $number;
     }
 
     public static function removePlus($number)
