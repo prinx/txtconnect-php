@@ -5,27 +5,34 @@ namespace Prinx\Txtconnect\Contracts;
 interface SmsResponseBagInterface
 {
     /**
-     * Get response for specified number.
+     * Have TXTCONNECT successfully received SMSes for processing?
      *
-     * @param string|null $number
-     *
-     * @return SmsResponse
+     * @return bool
      */
-    public function get($number = null);
+    public function isBeingProcessed();
 
     /**
      * First Sms processed response.
      *
-     * @return SmsResponse|null
+     * @return \Prinx\Txtconnect\SmsResponse|null
      */
     public function first();
 
     /**
      * Last Sms processed response.
      *
-     * @return SmsResponse|null
+     * @return \Prinx\Txtconnect\SmsResponse|null
      */
     public function last();
+
+    /**
+     * Get response for specified number.
+     *
+     * @param string|null $number
+     *
+     * @return \Prinx\Txtconnect\SmsResponse
+     */
+    public function get($number = null);
 
     /**
      * Responses.
@@ -33,13 +40,6 @@ interface SmsResponseBagInterface
      * @return array
      */
     public function getResponses();
-
-    /**
-     * Have TXTCONNECT successfully received SMSes for processing?
-     *
-     * @return boolean
-     */
-    public function isBeingProcessed();
 
     /**
      * Actual numbers SMS was sent to. This might be different from the
