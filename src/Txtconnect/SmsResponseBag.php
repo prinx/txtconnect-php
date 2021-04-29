@@ -45,14 +45,11 @@ class SmsResponseBag extends SmsResponseBagAbstract
     {
         $this->numbers = $responses['numbers'];
         $this->originalNumbers = $responses['originalNumbers'];
+        $this->responses = $responses;
 
         if (!$responses['success']) {
             $this->error = $responses['error'];
-
-            return;
         }
-
-        $this->responses = $responses;
     }
 
     /**

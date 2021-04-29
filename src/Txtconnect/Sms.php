@@ -266,6 +266,8 @@ class Sms extends SmsAbstract
             try {
                 $phone = PhoneNumberUtils::parse($phone, $this->defaultCountry);
             } catch (NumberParseException $th) {
+                echo $th->getMessage();
+
                 return self::INVALID_NUMBER;
             }
 
@@ -276,6 +278,7 @@ class Sms extends SmsAbstract
             if (PhoneNumberUtils::canReceiveSms($phone)) {
                 return self::CANNOT_RECEIVE_SMS;
             }
+            var_dump($phone, $this->defaultCountry);
 
             return PhoneNumberUtils::removePlus(PhoneNumberUtils::formatE164($phone));
         }, $phones);
