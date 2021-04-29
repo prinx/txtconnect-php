@@ -270,7 +270,7 @@ class Sms extends SmsAbstract
 
         $parsed = array_map(function ($phone) {
             try {
-                $phone = PhoneNumberUtils::parse($phone, $this->country);
+                $phone = PhoneNumberUtils::parse($phone, $this->defaultCountry);
             } catch (NumberParseException $th) {
                 return self::INVALID_NUMBER;
             }
