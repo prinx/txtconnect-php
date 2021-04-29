@@ -3,7 +3,7 @@
 namespace Prinx\Txtconnect;
 
 use Prinx\Txtconnect\Abstracts\SmsResponseBagAbstract;
-use ResponseBagCallback;
+use Prinx\Txtconnect\Traits\ResponseBagCallback;
 
 class SmsResponseBag extends SmsResponseBagAbstract
 {
