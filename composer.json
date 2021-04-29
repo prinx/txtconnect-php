@@ -1,0 +1,32 @@
+{
+    "name": "prinx/txtconnect",
+    "description": "TxtConnect PHP SDK",
+    "type": "library",
+    "require": {
+        "prinx/dotenv": "^0.4.3",
+        "giggsey/libphonenumber-for-php": "^8.12",
+        "symfony/http-client": "^5.2"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^9.5",
+        "nunomaduro/collision": "^5.4"
+    },
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Prince Dorcis",
+            "email": "princedorcis@gmail.com"
+        }
+    ],
+    "minimum-stability": "stable",
+    "autoload": {
+        "psr-4": {
+            "Prinx\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Tests\\": "tests/"
+        }
+    }
+}
