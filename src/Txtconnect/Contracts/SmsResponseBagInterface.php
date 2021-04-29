@@ -2,6 +2,6 @@
 
 namespace Prinx\Txtconnect\Contracts;
 
-interface SmsResponseInterface
+interface SmsResponseBagInterface
 {
 }
