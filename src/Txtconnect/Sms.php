@@ -297,20 +297,6 @@ class Sms extends SmsAbstract
         return $this;
     }
 
-    /**
-     * Set default country code.
-     *
-     * @param int $code
-     *
-     * @return $this
-     */
-    public function countryCode($code)
-    {
-        $this->defaultCountryCode = $code;
-
-        return $this;
-    }
-
     public function asUnicode()
     {
         $this->isUnicode = true;
