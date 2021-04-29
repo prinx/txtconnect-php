@@ -27,7 +27,7 @@ class SmsResponse extends SmsResponseAbstract
      */
     public function __construct($response, $number, $originalNumber)
     {
-        $this->rawResponse = $response;
+        $this->rawResponse = is_string($response) ? $response : $response->getContent(false);
         $this->number = $number;
         $this->originalNumber = $originalNumber;
 
@@ -37,7 +37,7 @@ class SmsResponse extends SmsResponseAbstract
             return;
         }
 
-        $this->response = $response['request_response']->getContent();
+        $this->response = $response->toArray();
     }
 
     public function isOk()
