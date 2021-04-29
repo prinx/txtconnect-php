@@ -31,6 +31,16 @@ class SmsResponseBag implements SmsResponseBagInterface
      */
     protected $originalNumbers = [];
 
+    /**
+     * @var SmsResponse|false|null
+     */
+    protected $first = false;
+
+    /**
+     * @var SmsResponse|false|null
+     */
+    protected $last = false;
+
     public function __construct(array $responses)
     {
         $this->numbers = $responses['numbers'];
@@ -55,6 +65,67 @@ class SmsResponseBag implements SmsResponseBagInterface
     public function get($number = null)
     {
         return $this->responses['data'][$number] ?? null;
+    }
+
+    /**
+     * First Sms processed response.
+     *
+     * @return SmsResponse|null
+     */
+    public function first()
+    {
+        if ($this->first !== false) {
+            return $this->first;
+        }
+
+        if (!$this->isBeingProcessed()) {
+            $this->first = null;
+
+            return null;
+        }
+
+        $first = null;
+        $index = 0;
+        $length = count($this->originalNumbers);
+
+        do {
+            $first = $this->get($this->originalNumbers[$index]);
+            ++$index;
+        } while (is_null($first) && $index < $length);
+
+        $this->first = $first;
+
+        return $first;
+    }
+
+    /**
+     * Last Sms processed response.
+     *
+     * @return SmsResponse|null
+     */
+    public function last()
+    {
+        if ($this->last !== false) {
+            return $this->last;
+        }
+
+        if (!$this->isBeingProcessed()) {
+            $this->last = null;
+
+            return null;
+        }
+
+        $last = null;
+        $index = count($this->originalNumbers) - 1;
+
+        do {
+            $last = $this->get($this->originalNumbers[$index]);
+            --$index;
+        } while (is_null($last) && $index >= 0);
+
+        $this->last = $last;
+
+        return $last;
     }
 
     /**
