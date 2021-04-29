@@ -93,4 +93,14 @@ class SmsResponse extends SmsResponseAbstract
     {
         return $this->originalNumber;
     }
+
+    public function getRawResponse()
+    {
+        return $this->rawResponse;
+    }
+
+    public function getResponse($key = null, $default = null)
+    {
+        return $key ? $this->response[$key] ?? $default : $this->response;
+    }
 }
