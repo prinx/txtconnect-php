@@ -66,7 +66,7 @@ class Sms extends SmsAbstract
                 continue;
             }
 
-            if (in_array($parsed, self::UNSUPPORTED_NUMBERS)) {
+            if (in_array($parsed, self::UNSUPPORTED_NUMBERS, true)) {
                 $smsResponses['data'][$number] = new SmsResponse($parsed, $number, $parsed);
                 continue;
             }
