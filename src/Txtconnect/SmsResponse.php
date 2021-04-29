@@ -51,32 +51,32 @@ class SmsResponse extends SmsResponseAbstract
 
     public function getCode()
     {
-        return $this->response['code'] ?? self::ERROR;
+        return $this->getResponse('code', self::ERROR);
     }
 
     public function getBatchNumber()
     {
-        return $this->response['batch_no'] ?? null;
+        return $this->getResponse('batch_no', null);
     }
 
     public function getUserName()
     {
-        return $this->response['user'] ?? null;
+        return $this->getResponse('user', null);
     }
 
     public function getStatusCheckUrl()
     {
-        return $this->response['status_check_url'] ?? null;
+        return $this->getResponse('status_check_url', null);
     }
 
     public function getBalance()
     {
-        return $this->response['balance'] ?? null;
+        return $this->getResponse('balance', null);
     }
 
     public function getMessage()
     {
-        return $this->response['message'] ?? $this->error;
+        return $this->getResponse('message', $this->error);
     }
 
     public function getError()
