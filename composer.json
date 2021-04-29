@@ -3,7 +3,7 @@
     "description": "TxtConnect PHP SDK",
     "type": "library",
     "require": {
-        "prinx/dotenv": "^0.4.3",
+        "prinx/dotenv": "^0.4",
         "giggsey/libphonenumber-for-php": "^8.12",
         "symfony/http-client": "^5.2"
     },

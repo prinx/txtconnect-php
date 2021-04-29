@@ -9,6 +9,7 @@ use Prinx\Txtconnect\Exceptions\InvalidHttpMethodException;
 use Prinx\Txtconnect\Exceptions\InvalidSenderNameException;
 use Prinx\Txtconnect\Utils\PhoneNumberUtils;
 use Symfony\Component\HttpClient\HttpClient;
+use function Prinx\Dotenv\env;
 use libphonenumber\NumberParseException;
 
 class Sms extends SmsAbstract
