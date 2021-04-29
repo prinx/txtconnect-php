@@ -46,17 +46,8 @@ class Sms extends SmsAbstract
         $numbers = $this->getParsedPhones();
         $originalNumbers = $this->phones;
 
-        try {
-            $method = $this->validateMethod($method);
-            $params = $this->prepareParams($sms);
-        } catch (\Throwable $th) {
-            return new SmsResponseBag([
-                'success' => false,
-                'error' => $th->getMessage(),
-                'numbers' => $numbers,
-                'originalNumbers' => $originalNumbers,
-            ]);
-        }
+        $method = $this->validateMethod($method);
+        $params = $this->prepareParams($sms);
 
         $httpClient = HttpClient::create();
         $paramsType = $method === 'POST' ? 'json' : 'query';
