@@ -23,6 +23,8 @@ class Sms extends SmsAbstract
     protected $isUnicode = false;
     protected $sent = [];
     protected $timeout = null;
+    protected $apiKey = null;
+    protected $from = null;
 
     const ENV_PREFIX = 'TXTCONNECT';
     const INVALID_NUMBER = 1;
