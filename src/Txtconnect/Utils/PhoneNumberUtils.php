@@ -98,7 +98,7 @@ class PhoneNumberUtils
      */
     public static function canReceiveSms($number, $region = null)
     {
-        $number = static::parse($number);
+        $number = static::parse($number, $region);
 
         return in_array(static::getLib()->getNumberType($number), [
             PhoneNumberType::MOBILE, PhoneNumberType::FIXED_LINE_OR_MOBILE,
