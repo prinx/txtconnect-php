@@ -22,6 +22,7 @@ class Sms extends SmsAbstract
     protected $removeDuplicate = true;
     protected $isUnicode = false;
     protected $sent = [];
+    protected $timeout = null;
 
     const ENV_PREFIX = 'TXTCONNECT';
     const INVALID_NUMBER = 1;
@@ -83,11 +84,16 @@ class Sms extends SmsAbstract
             }
 
             $params['to'] = $parsed;
-
-            $responses[] = $httpClient->request($method, $this->endpoint, [
+            $options = [
                 $paramsType => $params,
                 'user_data' => [$number, $parsed],
-            ]);
+            ];
+
+            if (is_numeric($this->timeout)) {
+                $options['timeout'] = $this->timeout;
+            }
+
+            $responses[] = $httpClient->request($method, $this->endpoint, $options);
 
             $this->sent[] = $number;
         }
@@ -323,6 +329,24 @@ class Sms extends SmsAbstract
     public function withDefaultEnv()
     {
         $this->envPrefix = self::ENV_PREFIX;
+
+        return $this;
+    }
+
+    /**
+     * Set timeout on the requests.
+     *
+     * @param int|float|string $timeout
+     *
+     * @return $this
+     */
+    public function setTimeout($timeout)
+    {
+        if (!is_numeric($timeout) || floatval($timeout) < 0) {
+            throw new \InvalidArgumentException('Invalid timeout.');
+        }
+
+        $this->timeout = floatval($timeout);
 
         return $this;
     }
