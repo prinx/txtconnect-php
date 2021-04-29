@@ -166,7 +166,7 @@ class PhoneNumberUtils
         return static::$phoneNumberLib;
     }
 
-    public static function ensurePlus($number)
+    public static function ensurePlus(string $number)
     {
         if (!str_starts_with($number, self::PLUS)) {
             return self::PLUS.$number;
