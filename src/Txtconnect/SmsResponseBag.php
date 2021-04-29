@@ -2,10 +2,10 @@
 
 namespace Prinx\Txtconnect;
 
-use Prinx\Txtconnect\Contracts\SmsResponseBagInterface;
+use Prinx\Txtconnect\Abstracts\SmsResponseBagAbstract;
 use ResponseBagCallback;
 
-class SmsResponseBag implements SmsResponseBagInterface
+class SmsResponseBag extends SmsResponseBagAbstract
 {
     use ResponseBagCallback;
 

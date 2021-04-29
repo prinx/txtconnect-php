@@ -2,9 +2,9 @@
 
 namespace Prinx\Txtconnect;
 
-use Prinx\Txtconnect\Contracts\SmsResponseInterface;
+use Prinx\Txtconnect\Abstracts\SmsResponseAbstract;
 
-class SmsResponse implements SmsResponseInterface
+class SmsResponse extends SmsResponseAbstract
 {
     protected $rawResponse;
     protected $response;
