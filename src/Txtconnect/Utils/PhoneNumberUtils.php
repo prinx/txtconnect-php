@@ -74,9 +74,9 @@ class PhoneNumberUtils
      */
     public static function parse($number, $region = null)
     {
-        if (!$region) {
+        if (!$region && is_string($number)) {
             $number = static::ensurePlus($number);
-        } else {
+        } elseif (is_string($region)) {
             $region = strtoupper($region);
         }
 
