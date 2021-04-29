@@ -14,6 +14,14 @@ use libphonenumber\NumberParseException;
 
 class Sms extends SmsAbstract
 {
+    const ENV_PREFIX = 'TXTCONNECT';
+    const INVALID_NUMBER = 1;
+    const CANNOT_RECEIVE_SMS = 2;
+    const UNSUPPORTED_NUMBERS = [
+        self::INVALID_NUMBER,
+        self::CANNOT_RECEIVE_SMS,
+    ];
+
     protected $defaultCountry = null;
     protected $defaultCountryCode = null;
     protected $supportedMethods = ['GET', 'POST'];
@@ -25,14 +33,7 @@ class Sms extends SmsAbstract
     protected $timeout = null;
     protected $apiKey = null;
     protected $from = null;
-
-    const ENV_PREFIX = 'TXTCONNECT';
-    const INVALID_NUMBER = 1;
-    const CANNOT_RECEIVE_SMS = 2;
-    const UNSUPPORTED_NUMBERS = [
-        self::INVALID_NUMBER,
-        self::CANNOT_RECEIVE_SMS,
-    ];
+    protected $envPrefix = self::ENV_PREFIX;
 
     /**
      * {@inheritdoc}
