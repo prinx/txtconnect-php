@@ -32,12 +32,12 @@ class SmsResponseBag extends SmsResponseBagAbstract
     protected $originalNumbers = [];
 
     /**
-     * @var SmsResponse|false|null
+     * @var \Prinx\Txtconnect\SmsResponse|false|null
      */
     protected $first = false;
 
     /**
-     * @var SmsResponse|false|null
+     * @var \Prinx\Txtconnect\SmsResponse|false|null
      */
     protected $last = false;
 
@@ -56,21 +56,15 @@ class SmsResponseBag extends SmsResponseBagAbstract
     }
 
     /**
-     * Get response for specified number.
-     *
-     * @param string|null $number
-     *
-     * @return SmsResponse
+     * {@inheritdoc}
      */
-    public function get($number = null)
+    public function isBeingProcessed()
     {
-        return $this->responses['data'][$number] ?? null;
+        return $this->responses['success'];
     }
 
     /**
-     * First Sms processed response.
-     *
-     * @return SmsResponse|null
+     * {@inheritdoc}
      */
     public function first()
     {
@@ -99,9 +93,7 @@ class SmsResponseBag extends SmsResponseBagAbstract
     }
 
     /**
-     * Last Sms processed response.
-     *
-     * @return SmsResponse|null
+     * {@inheritdoc}
      */
     public function last()
     {
@@ -129,9 +121,15 @@ class SmsResponseBag extends SmsResponseBagAbstract
     }
 
     /**
-     * Responses.
-     *
-     * @return array
+     * {@inheritdoc}
+     */
+    public function get($number = null)
+    {
+        return $this->responses['data'][$number] ?? null;
+    }
+
+    /**
+     * {@inheritdoc}
      */
     public function getResponses()
     {
@@ -139,20 +137,7 @@ class SmsResponseBag extends SmsResponseBagAbstract
     }
 
     /**
-     * Have TXTCONNECT successfully received SMSes for processing?
-     *
-     * @return boolean
-     */
-    public function isBeingProcessed()
-    {
-        return $this->responses['success'];
-    }
-
-    /**
-     * Actual numbers SMS was sent to. This might be different from the
-     * original numbers because the numbers are sanitize before SMS is sent.
-     *
-     * @return array
+     * {@inheritdoc}
      */
     public function numbers()
     {
@@ -160,9 +145,7 @@ class SmsResponseBag extends SmsResponseBagAbstract
     }
 
     /**
-     * Original numbers the developer sent the SMS to.
-     *
-     * @return array
+     * {@inheritdoc}
      */
     public function originalNumbers()
     {
@@ -170,9 +153,7 @@ class SmsResponseBag extends SmsResponseBagAbstract
     }
 
     /**
-     * Error if request is not being processed.
-     *
-     * @return string|null
+     * {@inheritdoc}
      */
     public function getError()
     {
