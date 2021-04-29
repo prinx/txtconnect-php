@@ -33,13 +33,7 @@ class Sms extends SmsAbstract
     ];
 
     /**
-     * Send sms.
-     *
-     * @param string[]|string $sms    A string or an array of string that will be concatenated with new lines.
-     * @param string[]|string $phone  A single number as string or an array of numbers.
-     * @param string          $method GET|POST
-     *
-     * @return SmsResponseBagInterface
+     * {@inheritdoc}
      */
     public function send($sms, $phone = null, string $method = 'POST'): SmsResponseBagInterface
     {
@@ -291,6 +285,11 @@ class Sms extends SmsAbstract
         return array_combine($phones, $parsed);
     }
 
+    /**
+     * Set default country to use for the numbers.
+     *
+     * @return $this
+     */
     public function country(string $code)
     {
         $this->defaultCountry = $code;
@@ -298,6 +297,13 @@ class Sms extends SmsAbstract
         return $this;
     }
 
+    /**
+     * Set default country code.
+     *
+     * @param int $code
+     *
+     * @return $this
+     */
     public function countryCode($code)
     {
         $this->defaultCountryCode = $code;
