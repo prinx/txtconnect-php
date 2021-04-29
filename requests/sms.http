@@ -1,0 +1,14 @@
+@phone={{$dotenv TXTCONNECT_PHONE}}
+@message="Hi"
+
+POST https://txtconnect.net/sms/api?action=send-sms HTTP/1.1
+Content-type: application/json
+
+{
+    "api_key": "{{$dotenv TXTCONNECT_KEY}}",
+    "to": "{{phone}}",
+    "from": "{{$dotenv TXTCONNECT_FROM}}",
+    "sms": "{{message}}",
+    "response": "json",
+    "unicode": 0
+}
