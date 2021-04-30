@@ -1,6 +1,8 @@
 @phone={{$dotenv TXTCONNECT_PHONE}}
 @message=Hi you
 
+### I - SENDING SMS
+### post
 POST {{$dotenv TXTCONNECT_ENDPOINT}}?action=send-sms HTTP/1.1
 Content-type: application/json
 
@@ -10,15 +12,29 @@ Content-type: application/json
     "from": "{{$dotenv TXTCONNECT_FROM}}",
     "sms": "{{message}}",
     "response": "json",
-    "unicode": true
+    "unicode": 0
 }
 
-###
+### post
+GET {{$dotenv TXTCONNECT_ENDPOINT}}?action=send-sms&api_key={{$dotenv TXTCONNECT_KEY}}&to={{phone}}&from={{$dotenv TXTCONNECT_FROM}}&sms={{message}}&response=json&unicode=0 HTTP/1.1
+
+### II - CHECK SMS STATUS
 @batch_no=
 
-{{$dotenv TXTCONNECT_ENDPOINT}}?action=get-status&api_key={{$dotenv TXTCONNECT_KEY}}&batch_no={{batch_no}}&response=json
+### post
+POST {{$dotenv TXTCONNECT_ENDPOINT}}?action=get-status HTTP/1.1
+Content-type: application/json
 
-### RESPONSE OF GET STATUS
+{
+    "api_key": "{{$dotenv TXTCONNECT_KEY}}",
+    "batch_no": "{{batch_no}}",
+    "response": "json"
+}
+
+### get
+GET {{$dotenv TXTCONNECT_ENDPOINT}}?action=get-status&api_key={{$dotenv TXTCONNECT_KEY}}&batch_no={{batch_no}}&response=json
+
+# RESPONSE OF GET STATUS
 # {
 #     "id": 1,
 #     "batch_no": "",
@@ -30,3 +46,29 @@ Content-type: application/json
 #     "status": "Message delivered Successfully",
 #     "type": null
 # }
+
+### III - GET INBOX
+### post
+POST {{$dotenv TXTCONNECT_ENDPOINT}}?action=get-inbox HTTP/1.1
+Content-type: application/json
+
+{
+    "api_key": "{{$dotenv TXTCONNECT_KEY}}",
+    "response": "json"
+}
+
+### get
+GET {{$dotenv TXTCONNECT_ENDPOINT}}?action=get-inbox&api_key={{$dotenv TXTCONNECT_KEY}}&response=json HTTP/1.1
+
+### IV - GET BALANCE
+### post
+POST {{$dotenv TXTCONNECT_ENDPOINT}}?action=check-balance HTTP/1.1
+Content-type: application/json
+
+{
+    "api_key": "{{$dotenv TXTCONNECT_KEY}}",
+    "response": "json"
+}
+
+### get
+GET {{$dotenv TXTCONNECT_ENDPOINT}}?action=check-balance&api_key={{$dotenv TXTCONNECT_KEY}}&response=json HTTP/1.1
