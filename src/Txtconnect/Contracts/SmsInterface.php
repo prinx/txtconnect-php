@@ -2,7 +2,7 @@
 
 namespace Prinx\Txtconnect\Contracts;
 
-interface SmsInterface
+interface SmsInterface extends ApiInterface
 {
     /**
      * Send sms.
