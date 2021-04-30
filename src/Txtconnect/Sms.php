@@ -24,7 +24,6 @@ class Sms extends SmsAbstract
     protected $removeDuplicate = true;
     protected $isUnicode = false;
     protected $sent = [];
-    protected $timeout = null;
     protected $from = null;
 
     /**
@@ -263,24 +262,6 @@ class Sms extends SmsAbstract
     public function asPlainText()
     {
         $this->isUnicode = false;
-
-        return $this;
-    }
-
-    /**
-     * Set timeout on the requests.
-     *
-     * @param int|float|string $timeout
-     *
-     * @return $this
-     */
-    public function setTimeout($timeout)
-    {
-        if (!is_numeric($timeout) || floatval($timeout) < 0) {
-            throw new \InvalidArgumentException('Invalid timeout.');
-        }
-
-        $this->timeout = floatval($timeout);
 
         return $this;
     }

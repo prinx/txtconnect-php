@@ -13,6 +13,7 @@ abstract class ApiAbstract implements ApiInterface
     const ENV_PREFIX = 'TXTCONNECT';
 
     protected $envPrefix = self::ENV_PREFIX;
+    protected $timeout = null;
 
     /**
      * @var HttpClient
@@ -90,7 +91,7 @@ abstract class ApiAbstract implements ApiInterface
     public function defaultOptions()
     {
         return [
-            $this->requestType() => $this->defaultParams()    
+            $this->requestType() => $this->defaultParams(),
         ];
     }
 
@@ -127,6 +128,24 @@ abstract class ApiAbstract implements ApiInterface
     public function withDefaultEnv()
     {
         $this->envPrefix = self::ENV_PREFIX;
+
+        return $this;
+    }
+
+    /**
+     * Set timeout on the requests.
+     *
+     * @param int|float|string $timeout
+     *
+     * @return $this
+     */
+    public function setTimeout($timeout)
+    {
+        if (!is_numeric($timeout) || floatval($timeout) < 0) {
+            throw new \InvalidArgumentException('Invalid timeout.');
+        }
+
+        $this->timeout = floatval($timeout);
 
         return $this;
     }
