@@ -5,11 +5,15 @@
     "require": {
         "prinx/dotenv": "^0.4",
         "giggsey/libphonenumber-for-php": "^8.12",
-        "symfony/http-client": "^5.2"
+        "symfony/http-client": "^5.2",
+        "league/iso3166": "^3.0",
+        "prinx/notify": "^0.1.0",
+        "prinx/slack-log": "^1.1"
     },
     "require-dev": {
         "phpunit/phpunit": "^9.5",
-        "nunomaduro/collision": "^5.4"
+        "nunomaduro/collision": "^5.4",
+        "damianopetrungaro/php-commitizen": "^0.2.0"
     },
     "license": "MIT",
     "authors": [
