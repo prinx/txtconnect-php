@@ -25,7 +25,6 @@ class Sms extends SmsAbstract
     protected $defaultCountry = null;
     protected $defaultCountryCode = null;
     protected $supportedMethods = ['GET', 'POST'];
-    protected $endpoint = 'https://txtconnect.net/sms/api?action=send-sms';
     protected $phones = [];
     protected $removeDuplicate = true;
     protected $isUnicode = false;
@@ -81,7 +80,7 @@ class Sms extends SmsAbstract
                 $options['timeout'] = $this->timeout;
             }
 
-            $responses[] = $httpClient->request($method, $this->endpoint, $options);
+            $responses[] = $httpClient->request($method, self::endpoint(), $options);
 
             $this->sent[] = $number;
         }
@@ -132,6 +131,16 @@ class Sms extends SmsAbstract
             'response' => 'json',
             'unicode' => $this->getIsUnicode(),
         ];
+    }
+
+    /**
+     * Get SMS endpoint.
+     *
+     * @return string
+     */
+    public static function endpoint()
+    {
+        return Endpoint::sms();
     }
 
     /**
