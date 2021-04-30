@@ -129,7 +129,7 @@ class Sms extends SmsAbstract
             'from' => $this->getFrom(),
             'sms' => $this->getSmsString($sms),
             'response' => 'json',
-            'unicode' => $this->getIsUnicode(),
+            'unicode' => intval($this->getIsUnicode()),
         ];
     }
 
