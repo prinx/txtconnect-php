@@ -55,7 +55,7 @@ abstract class ApiAbstract implements ApiInterface
      */
     public function request(string $endpoint, array $options = [])
     {
-        $options = $options ?: $this->prepareParams();
+        $options = $options ?: $this->defaultOptions();
 
         return $this->client()->request($this->method, $endpoint, $options);
     }
@@ -79,12 +79,24 @@ abstract class ApiAbstract implements ApiInterface
      *
      * @return array
      */
-    public function prepareParams()
+    public function defaultParams()
     {
         return [
             'api_key' => $this->getApiKey(),
             'response' => 'json',
         ];
+    }
+
+    public function defaultOptions()
+    {
+        return [
+            $this->requestType() => $this->defaultParams()    
+        ];
+    }
+
+    public function requestType()
+    {
+        return $this->method === 'POST' ? 'json' : 'query';
     }
 
     /**

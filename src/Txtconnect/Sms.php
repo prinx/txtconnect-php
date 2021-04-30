@@ -40,10 +40,7 @@ class Sms extends SmsAbstract
 
         $numbers = $this->getParsedPhones();
         $originalNumbers = $this->phones;
-
         $params = $this->prepareParams($sms);
-
-        $paramsType = $method === 'POST' ? 'json' : 'query';
 
         $smsResponses = [
             'success' => true,
@@ -52,6 +49,7 @@ class Sms extends SmsAbstract
         ];
 
         $responses = [];
+        $paramsType = $this->$this->requestType();
 
         foreach ($numbers as $number => $parsed) {
             if ($this->removeDuplicate && in_array($number, $this->sent)) {
@@ -103,7 +101,7 @@ class Sms extends SmsAbstract
             'unicode' => intval($this->getIsUnicode()),
         ];
 
-        return array_replace(parent::prepareParams(), $smsParams);
+        return array_replace($this->defaultParams(), $smsParams);
     }
 
     /**
