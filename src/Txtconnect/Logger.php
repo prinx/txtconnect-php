@@ -9,7 +9,7 @@ class Logger extends Log
 {
     public function __construct($file = '')
     {
-        $this->setFile($file ?: $this->defaultFile());
+        parent::__construct($file ?: $this->defaultFile());
     }
 
     public function log(string $level, $message, $flag = FILE_APPEND)
@@ -18,7 +18,7 @@ class Logger extends Log
             return $this;
         }
 
-        SlackLog::log($message, $level, 'TXTCONNECT');
+        SlackLog::log($message, $level, 'TXTCONNECT_SLACK');
 
         if (env('TXTCONNECT_LOCAL_LOG_ENABLED', true) === false) {
             return $this;
