@@ -58,6 +58,10 @@ abstract class ApiAbstract implements ApiInterface
     {
         $options = $options ?: $this->defaultOptions();
 
+        if (is_numeric($this->timeout)) {
+            $options['timeout'] = $this->timeout;
+        }
+
         return $this->client()->request($this->method, $endpoint, $options);
     }
 

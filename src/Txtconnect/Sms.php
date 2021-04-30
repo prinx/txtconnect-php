@@ -66,10 +66,6 @@ class Sms extends SmsAbstract
                 'user_data' => [$number, $parsed],
             ];
 
-            if (is_numeric($this->timeout)) {
-                $options['timeout'] = $this->timeout;
-            }
-
             $responses[] = $this->request(self::endpoint(), $options);
 
             $this->sent[] = $number;
