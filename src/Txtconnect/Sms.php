@@ -266,22 +266,20 @@ class Sms extends SmsAbstract
         $phones = $this->removeDuplicate ? array_unique($this->phones, SORT_REGULAR) : $this->phones;
 
         $parsed = array_map(function ($phone) {
+
             try {
                 $phone = PhoneNumberUtils::parse($phone, $this->defaultCountry);
             } catch (NumberParseException $th) {
-                echo $th->getMessage();
-
                 return self::INVALID_NUMBER;
             }
 
-            if (PhoneNumberUtils::isValidNumber($phone)) {
+            if (!PhoneNumberUtils::isValidNumber($phone)) {
                 return self::INVALID_NUMBER;
             }
 
-            if (PhoneNumberUtils::canReceiveSms($phone)) {
+            if (!PhoneNumberUtils::canReceiveSms($phone)) {
                 return self::CANNOT_RECEIVE_SMS;
             }
-            var_dump($phone, $this->defaultCountry);
 
             return PhoneNumberUtils::removePlus(PhoneNumberUtils::formatE164($phone));
         }, $phones);
