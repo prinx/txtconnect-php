@@ -6,9 +6,10 @@ class InboxItem
 {
     protected $content;
 
-    public function __construct($content)
+    public function __construct(array $content, int $index)
     {
         $this->content = $content;
+        $this->content['index'] = $index;
     }
 
     public function id()
@@ -54,6 +55,16 @@ class InboxItem
     public function type()
     {
         return $this->content('type');
+    }
+
+    /**
+     * The index of this item in the inbox.
+     *
+     * @return int
+     */
+    public function index()
+    {
+        return $this->content('index');
     }
 
     public function content($key = '')
