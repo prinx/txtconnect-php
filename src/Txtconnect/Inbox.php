@@ -3,6 +3,8 @@
 namespace Prinx\Txtconnect;
 
 use Prinx\Txtconnect\Abstracts\InboxAbstract;
+use Prinx\Txtconnect\Exceptions\UndefinedInboxItemContentException;
+use Prinx\Txtconnect\Exceptions\UndefinedInboxItemException;
 
 class Inbox extends InboxAbstract
 {
@@ -73,7 +75,7 @@ class Inbox extends InboxAbstract
      */
     public function first()
     {
-        return $this->nth(1);
+        return $this->nth(0);
     }
 
     /**
@@ -96,15 +98,23 @@ class Inbox extends InboxAbstract
             return $this->payload;
         }
 
-        if ($key) {
-            return $this->raw[$number][$key];
+        if (!isset($this->raw[$number])) {
+            throw new UndefinedInboxItemException($number);
         }
 
-        if (!isset($this->items[$number])) {
-            $this->items[$number] = new InboxItem($this->raw[$number], $number);
+        if (!$key) {
+            if (!isset($this->items[$number])) {
+                $this->items[$number] = new InboxItem($this->raw[$number], $number);
+            }
+
+            return $this->items[$number];
         }
 
-        return $this->items[$number];
+        if (!isset($this->raw[$number][$key])) {
+            throw new UndefinedInboxItemContentException($number, $key);
+        }
+
+        return $this->items[$number][$key];
     }
 
     public function count()
