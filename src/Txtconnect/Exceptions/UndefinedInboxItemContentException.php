@@ -2,6 +2,6 @@
 
 namespace Prinx\Txtconnect\Exceptions;
 
-class UndefinedInboxItemContentException extends \Exception
+class UndefinedInboxItemContentException extends \InvalidArgumentException
 {
 }
