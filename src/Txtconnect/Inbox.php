@@ -3,27 +3,9 @@
 namespace Prinx\Txtconnect;
 
 use Prinx\Txtconnect\Abstracts\InboxAbstract;
-use Prinx\Txtconnect\Exceptions\UndefinedInboxItemContentException;
-use Prinx\Txtconnect\Exceptions\UndefinedInboxItemException;
 
 class Inbox extends InboxAbstract
 {
-    /**
-     * Inbox items in object form.
-     *
-     * @var array[]|null
-     */
-    protected $raw = null;
-
-    /**
-     * Inbox items in object form.
-     *
-     * @var InboxItem[]
-     */
-    protected $items = [];
-
-    protected $fetched = false;
-
     /**
      * Get inbox content fron API.
      *
@@ -35,7 +17,6 @@ class Inbox extends InboxAbstract
 
         $this->raw = $response->toArray();
         $this->items = [];
-        $this->fetched = true;
 
         return $this;
     }
@@ -50,81 +31,9 @@ class Inbox extends InboxAbstract
         return Endpoint::inbox();
     }
 
-    /**
-     * All the items in the inbox.
-     *
-     * @return InboxItem[]
-     */
-    public function all()
-    {
-        $allRaw = $this->nth();
-
-        foreach ($allRaw as $index => $item) {
-            if (!isset($this->items[$index])) {
-                $this->items[$index] = new InboxItem($item, $index);
-            }
-        }
-
-        return $this->items;
-    }
-
-    /**
-     * Get first inbox item.
-     *
-     * @return InboxItem
-     */
-    public function first()
-    {
-        return $this->nth(0);
-    }
-
-    /**
-     * Get last inbox item.
-     *
-     * @return InboxItem
-     */
-    public function last()
-    {
-        return $this->nth($this->count() - 1);
-    }
-
-    public function nth($number = '', $key = '')
-    {
-        if (is_null($this->raw) || !$this->fetched) {
-            $this->fetch();
-        }
-
-        if (!$number) {
-            return $this->payload;
-        }
-
-        if (!isset($this->raw[$number])) {
-            throw new UndefinedInboxItemException($number);
-        }
-
-        if (!$key) {
-            if (!isset($this->items[$number])) {
-                $this->items[$number] = new InboxItem($this->raw[$number], $number);
-            }
-
-            return $this->items[$number];
-        }
-
-        if (!isset($this->raw[$number][$key])) {
-            throw new UndefinedInboxItemContentException($number, $key);
-        }
-
-        return $this->items[$number][$key];
-    }
-
-    public function count()
-    {
-        return count($this->nth());
-    }
-
     public function refresh()
     {
-        $this->fetched = false;
+        $this->raw = null;
 
         return $this;
     }
