@@ -30,11 +30,4 @@ class Inbox extends InboxAbstract
     {
         return Endpoint::inbox();
     }
-
-    public function refresh()
-    {
-        $this->raw = null;
-
-        return $this;
-    }
 }
