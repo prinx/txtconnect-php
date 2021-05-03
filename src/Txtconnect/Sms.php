@@ -48,7 +48,7 @@ class Sms extends SmsAbstract
         ];
 
         $responses = [];
-        $paramsType = $this->$this->requestType();
+        $paramsType = $this->requestType();
 
         foreach ($numbers as $number => $parsed) {
             if ($this->removeDuplicate && in_array($number, $this->sent)) {
