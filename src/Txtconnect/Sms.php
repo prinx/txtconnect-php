@@ -37,7 +37,7 @@ class Sms extends SmsAbstract
 
         $this->via($method);
 
-        $numbers = $this->getParsedPhones();
+        $numbers = $this->getParsedNumbers();
         $params = $this->prepareParams($sms);
 
         $smsResponses = [
@@ -208,9 +208,9 @@ class Sms extends SmsAbstract
         return $this->phones;
     }
 
-    public function getParsedPhones()
+    public function getParsedNumbers()
     {
-        $phones = $this->removeDuplicate ? array_unique($this->phones, SORT_REGULAR) : $this->phones;
+        $originalNumbers = $this->removeDuplicate ? array_unique($this->phones, SORT_REGULAR) : $this->phones;
 
         $parsed = array_map(function ($phone) {
             try {
@@ -228,11 +228,11 @@ class Sms extends SmsAbstract
             }
 
             return PhoneNumberUtils::removePlus(PhoneNumberUtils::formatE164($phone));
-        }, $phones);
+        }, $originalNumbers);
 
         $parsed = PhoneNumberUtils::purify($parsed, false);
 
-        return array_combine($phones, $parsed);
+        return array_combine($originalNumbers, $parsed);
     }
 
     /**
