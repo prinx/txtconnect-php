@@ -50,7 +50,7 @@ class Sms extends SmsAbstract
         $paramsType = $this->requestType();
 
         foreach ($numbers as $original => $parsed) {
-            if ($this->removeDuplicate && in_array($original, $this->sent)) {
+            if ($this->removeDuplicate && in_array($parsed, $this->sent)) {
                 continue;
             }
 
@@ -67,7 +67,7 @@ class Sms extends SmsAbstract
 
             $responses[] = $this->request(self::endpoint(), $options);
 
-            $this->sent[] = $original;
+            $this->sent[] = $parsed;
         }
 
         foreach ($this->client()->stream($responses) as $response => $chunk) {
