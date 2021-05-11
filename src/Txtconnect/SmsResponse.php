@@ -23,7 +23,7 @@ class SmsResponse extends SmsResponseAbstract
      * @param string                                                 $originalNumber
      * @param string                                                 $parsedNumber
      *
-     * @return $this;
+     * @return $this
      */
     public function __construct($response, $originalNumber, $parsedNumber)
     {
