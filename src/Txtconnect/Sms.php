@@ -49,31 +49,31 @@ class Sms extends SmsAbstract
         $responses = [];
         $paramsType = $this->requestType();
 
-        foreach ($numbers as $number => $parsed) {
-            if ($this->removeDuplicate && in_array($number, $this->sent)) {
+        foreach ($numbers as $original => $parsed) {
+            if ($this->removeDuplicate && in_array($original, $this->sent)) {
                 continue;
             }
 
             if (in_array($parsed, self::UNSUPPORTED_NUMBERS, true)) {
-                $smsResponses['data'][$number] = new SmsResponse($parsed, $number, $parsed);
+                $smsResponses['data'][$original] = new SmsResponse($parsed, $original, $parsed);
                 continue;
             }
 
             $params['to'] = $parsed;
             $options = [
                 $paramsType => $params,
-                'user_data' => [$number, $parsed],
+                'user_data' => [$original, $parsed],
             ];
 
             $responses[] = $this->request(self::endpoint(), $options);
 
-            $this->sent[] = $number;
+            $this->sent[] = $original;
         }
 
         foreach ($this->client()->stream($responses) as $response => $chunk) {
             if ($chunk->isLast()) {
-                [$number, $parsed] = $response->getInfo('user_data');
-                $smsResponses['data'][$number] = new SmsResponse($response, $number, $parsed);
+                [$originalNumber, $parsedNumber] = $response->getInfo('user_data');
+                $smsResponses['data'][$originalNumber] = new SmsResponse($response, $originalNumber, $parsedNumber);
             }
         }
 
