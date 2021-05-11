@@ -8,14 +8,8 @@ use VCR\VCR;
 
 class BalanceTest extends TestCase
 {
-    protected function setUp(): void
-    {
-        VCR::configure()
-            ->setStorage('json');
-    }
-
     /**
-     * @vcr get-balance.json
+     * @vcr get-balance.json.
      */
     public function testCanGetBalanceSuccessfully()
     {
