@@ -38,13 +38,12 @@ class Sms extends SmsAbstract
         $this->via($method);
 
         $numbers = $this->getParsedPhones();
-        $originalNumbers = $this->phones;
         $params = $this->prepareParams($sms);
 
         $smsResponses = [
             'success' => true,
             'numbers' => $numbers,
-            'originalNumbers' => $originalNumbers,
+            'originalNumbers' => $this->phones,
         ];
 
         $responses = [];
