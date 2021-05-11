@@ -9,7 +9,9 @@ use VCR\VCR;
 class BalanceTest extends TestCase
 {
     /**
-     * @vcr get-balance.json.
+     * Enable VCR on this test by removing the space between '@' and 'vcr' below.
+     *
+     * @ vcr get-balance.json.
      */
     public function testCanGetBalanceSuccessfully()
     {
