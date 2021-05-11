@@ -9,8 +9,10 @@ class SmsResponseBag extends SmsResponseBagAbstract
 {
     use ResponseBagCallback;
 
+    protected $isBeingProcessed = false;
+
     /**
-     * @var array
+     * @var array<string,SmsResponse>
      */
     protected $responses = [];
 
@@ -22,14 +24,18 @@ class SmsResponseBag extends SmsResponseBagAbstract
     protected $error = null;
 
     /**
-     * @var array
+     * Original numbers.
+     *
+     * @var array|null
      */
-    protected $numbers = [];
+    protected $originalNumbers;
 
     /**
-     * @var array
+     * Map of original numbers to parsed numbers.
+     *
+     * @var array<string,string>
      */
-    protected $originalNumbers = [];
+    protected $numberMap = [];
 
     /**
      * @var \Prinx\Txtconnect\SmsResponse|false|null
@@ -41,15 +47,18 @@ class SmsResponseBag extends SmsResponseBagAbstract
      */
     protected $last = false;
 
-    public function __construct(array $responses)
+    /**
+     * @param array  $isBeingProcessed Has SMS reached TxtConnect?
+     * @param array  $responses        Responses and info on the request
+     * @param array  $numberMap        original numbers mapped to parsed numbers
+     * @param string $error            original numbers mapped to parsed numbers
+     */
+    public function __construct(bool $isBeingProcessed, array $responses, array $numberMap, $error = null)
     {
-        $this->numbers = $responses['numbers'];
-        $this->originalNumbers = $responses['originalNumbers'];
+        $this->isBeingProcessed = $isBeingProcessed;
         $this->responses = $responses;
-
-        if (!$responses['success']) {
-            $this->error = $responses['error'];
-        }
+        $this->numberMap = $numberMap;
+        $this->error = $error;
     }
 
     /**
@@ -57,7 +66,7 @@ class SmsResponseBag extends SmsResponseBagAbstract
      */
     public function isBeingProcessed()
     {
-        return $this->responses['success'];
+        return $this->isBeingProcessed;
     }
 
     /**
@@ -77,10 +86,10 @@ class SmsResponseBag extends SmsResponseBagAbstract
 
         $first = null;
         $index = 0;
-        $length = count($this->originalNumbers);
+        $length = count($this->originalNumbers());
 
         do {
-            $first = $this->get($this->originalNumbers[$index]);
+            $first = $this->get($this->originalNumbers()[$index]);
             ++$index;
         } while (is_null($first) && $index < $length);
 
@@ -105,10 +114,10 @@ class SmsResponseBag extends SmsResponseBagAbstract
         }
 
         $last = null;
-        $index = count($this->originalNumbers) - 1;
+        $index = count($this->originalNumbers()) - 1;
 
         do {
-            $last = $this->get($this->originalNumbers[$index]);
+            $last = $this->get($this->originalNumbers()[$index]);
             --$index;
         } while (is_null($last) && $index >= 0);
 
@@ -122,7 +131,17 @@ class SmsResponseBag extends SmsResponseBagAbstract
      */
     public function get($number = null)
     {
-        return $this->responses['data'][$number] ?? null;
+        if (isset($this->responses[$number])) {
+            return $this->responses[$number];
+        }
+
+        $originalNumber = array_search($number, $this->numberMap, true);
+
+        if ($originalNumber !== false) {
+            return $this->responses[$originalNumber];
+        }
+
+        return null;
     }
 
     /**
@@ -138,7 +157,7 @@ class SmsResponseBag extends SmsResponseBagAbstract
      */
     public function numbers()
     {
-        return $this->numbers;
+        return $this->numberMap;
     }
 
     /**
@@ -146,6 +165,10 @@ class SmsResponseBag extends SmsResponseBagAbstract
      */
     public function originalNumbers()
     {
+        if (is_null($this->originalNumbers)) {
+            $this->originalNumbers = array_keys($this->numberMap);
+        }
+
         return $this->originalNumbers;
     }
 
