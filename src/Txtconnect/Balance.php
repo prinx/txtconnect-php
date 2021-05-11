@@ -6,6 +6,7 @@ use Prinx\Txtconnect\Abstracts\BalanceAbstract;
 
 class Balance extends BalanceAbstract
 {
+    protected $rawResponse;
     protected $payload = [];
     protected $fetched = false;
 
@@ -13,6 +14,7 @@ class Balance extends BalanceAbstract
     {
         $response = $this->request(self::endpoint());
 
+        $this->rawResponse = $response->getContent(false);
         $this->payload = $response->toArray();
         $this->fetched = true;
 
@@ -48,10 +50,25 @@ class Balance extends BalanceAbstract
         return $key ? $this->payload[$key] : $this->payload;
     }
 
+    /**
+     * Re-fetch balance the next time the user tries to get the balance value.
+     *
+     * @return $this
+     */
     public function refresh()
     {
         $this->fetched = false;
 
         return $this;
+    }
+
+    /**
+     * Raw response.
+     *
+     * @return string|null
+     */
+    public function getRawResponse()
+    {
+        return $this->rawResponse;
     }
 }
