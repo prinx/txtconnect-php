@@ -55,7 +55,8 @@ class Sms extends SmsAbstract
             }
 
             if (in_array($parsed, self::UNSUPPORTED_NUMBERS, true)) {
-                $smsResponses['data'][$original] = new SmsResponse($parsed, $original, $parsed);
+                $error = $this->getUnsupportedNumberError($parsed);
+                $smsResponses['data'][$original] = new SmsResponse($error, $original, $parsed);
                 continue;
             }
 
@@ -96,6 +97,16 @@ class Sms extends SmsAbstract
         ];
 
         return array_replace($this->defaultParams(), $smsParams);
+    }
+
+    public function getUnsupportedNumberError($number)
+    {
+        switch ($number) {
+            case self::CANNOT_RECEIVE_SMS:
+                return 'Number cannot receive SMS';
+            default:
+                return 'Invalid number';
+        }
     }
 
     /**
