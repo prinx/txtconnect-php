@@ -37,26 +37,21 @@ class Sms extends SmsAbstract
 
         $this->via($method);
 
-        $numbers = $this->getParsedNumbers();
+        $numberMap = $this->mapOriginalNumbersToParsed();
         $params = $this->prepareParams($sms);
 
-        $smsResponses = [
-            'success' => true,
-            'numbers' => $numbers,
-            'originalNumbers' => $this->phones,
-        ];
-
+        $smsResponses = [];
         $responses = [];
         $paramsType = $this->requestType();
 
-        foreach ($numbers as $original => $parsed) {
+        foreach ($numberMap as $original => $parsed) {
             if ($this->removeDuplicate && in_array($parsed, $this->sent)) {
                 continue;
             }
 
             if (in_array($parsed, self::UNSUPPORTED_NUMBERS, true)) {
                 $error = $this->getUnsupportedNumberError($parsed);
-                $smsResponses['data'][$original] = new SmsResponse($error, $original, $parsed);
+                $smsResponses[$original] = new SmsResponse($error, $original, $parsed);
                 continue;
             }
 
@@ -71,14 +66,17 @@ class Sms extends SmsAbstract
             $this->sent[] = $parsed;
         }
 
+        $isBeingProcessed = false;
+
         foreach ($this->client()->stream($responses) as $response => $chunk) {
             if ($chunk->isLast()) {
                 [$originalNumber, $parsedNumber] = $response->getInfo('user_data');
-                $smsResponses['data'][$originalNumber] = new SmsResponse($response, $originalNumber, $parsedNumber);
+                $smsResponses[$originalNumber] = new SmsResponse($response, $originalNumber, $parsedNumber);
+                $isBeingProcessed = true;
             }
         }
 
-        return new SmsResponseBag($smsResponses);
+        return new SmsResponseBag($isBeingProcessed, $smsResponses, $numberMap);
     }
 
     /**
@@ -219,9 +217,9 @@ class Sms extends SmsAbstract
         return $this->phones;
     }
 
-    public function getParsedNumbers()
+    public function mapOriginalNumbersToParsed()
     {
-        $originalNumbers = $this->removeDuplicate ? array_unique($this->phones, SORT_REGULAR) : $this->phones;
+        $originalNumbers = $this->phones;
 
         $parsed = array_map(function ($phone) {
             try {
@@ -241,7 +239,8 @@ class Sms extends SmsAbstract
             return PhoneNumberUtils::removePlus(PhoneNumberUtils::formatE164($phone));
         }, $originalNumbers);
 
-        $parsed = PhoneNumberUtils::purify($parsed, false);
+        // Duplication is handled when sending the request.
+        $parsed = PhoneNumberUtils::purify($parsed, false, false);
 
         return array_combine($originalNumbers, $parsed);
     }
