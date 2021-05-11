@@ -199,10 +199,11 @@ class PhoneNumberUtils
      *
      * @param string[]|string $contacts
      * @param bool            $removeDuplicate
+     * @param bool            $removeEmpty
      *
      * @return array
      */
-    public static function purify($contacts, $removeDuplicate = true)
+    public static function purify($contacts, $removeDuplicate = true, $removeEmpty = true)
     {
         if (is_array($contacts)) {
             $contactsString = implode(self::CONTACT_STRING_SEPERATOR, $contacts);
@@ -216,11 +217,9 @@ class PhoneNumberUtils
 
         $contacts = static::toArray($contactsString);
 
-        $contacts = static::removeEmpty($contacts);
+        $removeEmpty && $contacts = static::removeEmpty($contacts);
 
-        if ($removeDuplicate) {
-            $contacts = static::removeDuplicate($contacts);
-        }
+        $removeDuplicate && $contacts = static::removeDuplicate($contacts);
 
         return $contacts;
     }
