@@ -135,6 +135,13 @@ class PhoneNumberUtils
         return static::parse($number)->getCountryCode();
     }
 
+    /**
+     * Get number with the format +{countryCode}{Number} (Eg: +233545454545, for a Ghanian number).
+     *
+     * @param string $number
+     *
+     * @return string The formatted number
+     */
     public static function formatE164($number)
     {
         return self::getLib()->format(static::parse($number), PhoneNumberFormat::E164);
