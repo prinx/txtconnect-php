@@ -4,7 +4,6 @@ namespace Tests\Unit;
 
 use Prinx\Txtconnect\Balance;
 use Tests\TestCase;
-use VCR\VCR;
 
 class BalanceTest extends TestCase
 {
