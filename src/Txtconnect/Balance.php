@@ -10,7 +10,7 @@ class Balance extends BalanceAbstract
     protected $payload = [];
     protected $fetched = false;
 
-    public function get()
+    public function fetch()
     {
         $response = $this->request(self::endpoint());
 
@@ -44,7 +44,7 @@ class Balance extends BalanceAbstract
     public function getOrRefresh($key = '')
     {
         if (empty($this->payload) || !$this->false) {
-            $this->get();
+            $this->fetch();
         }
 
         return $key ? $this->payload[$key] : $this->payload;
