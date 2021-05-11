@@ -20,15 +20,15 @@ class SmsResponse extends SmsResponseAbstract
      * Create new instance of SmsResponse.
      *
      * @param string|\Symfony\Contracts\HttpClient\ResponseInterface $response
-     * @param string                                                 $number
      * @param string                                                 $originalNumber
+     * @param string                                                 $parsedNumber
      *
      * @return $this;
      */
-    public function __construct($response, $number, $originalNumber)
+    public function __construct($response, $originalNumber, $parsedNumber)
     {
         $this->rawResponse = is_string($response) ? $response : $response->getContent(false);
-        $this->number = $number;
+        $this->number = $parsedNumber;
         $this->originalNumber = $originalNumber;
 
         if (is_string($response)) {
