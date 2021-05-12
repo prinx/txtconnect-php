@@ -9,7 +9,7 @@ class SmsResponse extends SmsResponseAbstract
     protected $rawResponse;
     protected $response;
     protected $error = null;
-    protected $number = null;
+    protected $parsedNumber = null;
     protected $originalNumber = null;
     protected $isOk = null;
 
@@ -28,7 +28,7 @@ class SmsResponse extends SmsResponseAbstract
     public function __construct($response, $originalNumber, $parsedNumber)
     {
         $this->rawResponse = is_string($response) ? $response : $response->getContent(false);
-        $this->number = $parsedNumber;
+        $this->parsedNumber = $parsedNumber;
         $this->originalNumber = $originalNumber;
 
         if (is_string($response)) {
@@ -84,9 +84,9 @@ class SmsResponse extends SmsResponseAbstract
         return $this->error;
     }
 
-    public function getNumber()
+    public function getParsedNumber()
     {
-        return $this->number;
+        return $this->parsedNumber;
     }
 
     public function getOriginalNumber()
