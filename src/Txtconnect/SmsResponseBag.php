@@ -187,6 +187,6 @@ class SmsResponseBag extends SmsResponseBagAbstract
             $this->count = count($this->numberMap);
         }
 
-        return$this->count;
+        return $this->count;
     }
 }
