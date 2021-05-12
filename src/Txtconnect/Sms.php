@@ -130,7 +130,7 @@ class Sms extends SmsAbstract
      */
     public function getFrom()
     {
-        $from = $this->from ?: env($this->envPrefix.'_FROM');
+        $from = $this->from ?: env($this->envPrefix.'_SENDER_ID');
 
         if (!$from) {
             throw new InvalidSenderNameException('No sender name defined.');
