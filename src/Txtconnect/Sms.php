@@ -45,7 +45,8 @@ class Sms extends SmsAbstract
         $paramsType = $this->requestType();
 
         foreach ($numberMap as $original => $parsed) {
-            if ($this->removeDuplicate && in_array($parsed, $this->sent)) {
+            if ($this->removeDuplicate && $mainDuplicate = array_search($parsed, $this->sent)) {
+                $smsResponses[$original] = $smsResponses[$mainDuplicate];
                 continue;
             }
 
@@ -63,7 +64,7 @@ class Sms extends SmsAbstract
 
             $responses[] = $this->request(self::endpoint(), $options);
 
-            $this->sent[] = $parsed;
+            $this->sent[$original] = $parsed;
         }
 
         $isBeingProcessed = false;
