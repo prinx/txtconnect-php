@@ -14,25 +14,29 @@ interface SmsResponseBagInterface
     /**
      * First Sms processed response.
      *
-     * @return \Prinx\Txtconnect\SmsResponse|null
+     * @return \Prinx\Txtconnect\SmsResponse
+     *
+     * @throws \Prinx\Txtconnect\Exceptions\SmsResponseNotFoundException
      */
     public function first();
 
     /**
      * Last Sms processed response.
      *
-     * @return \Prinx\Txtconnect\SmsResponse|null
+     * @return \Prinx\Txtconnect\SmsResponse
+     *
+     * @throws \Prinx\Txtconnect\Exceptions\SmsResponseNotFoundException
      */
     public function last();
 
     /**
      * Get response for specified number.
      *
-     * @param string|null $number
-     *
      * @return \Prinx\Txtconnect\SmsResponse
+     *
+     * @throws \Prinx\Txtconnect\Exceptions\SmsResponseNotFoundException
      */
-    public function get($number = null);
+    public function get(string $number);
 
     /**
      * Responses.

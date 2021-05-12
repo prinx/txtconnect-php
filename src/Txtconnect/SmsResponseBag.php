@@ -3,7 +3,7 @@
 namespace Prinx\Txtconnect;
 
 use Prinx\Txtconnect\Abstracts\SmsResponseBagAbstract;
-use Prinx\Txtconnect\Exceptions\NoSmsSentException;
+use Prinx\Txtconnect\Exceptions\SmsResponseNotFoundException;
 use Prinx\Txtconnect\Traits\ResponseBagCallback;
 
 class SmsResponseBag extends SmsResponseBagAbstract
@@ -94,12 +94,10 @@ class SmsResponseBag extends SmsResponseBagAbstract
         $numbers = $this->originalNumbers();
 
         if (!isset($numbers[0])) {
-            throw new NoSmsSentException();
+            throw new SmsResponseNotFoundException();
         }
 
-        $this->first = $numbers[0];
-
-        return $this->first;
+        return $this->first = $this->get($numbers[0]);
     }
 
     /**
@@ -114,18 +112,18 @@ class SmsResponseBag extends SmsResponseBagAbstract
         $count = $this->count();
 
         if (!$count) {
-            throw new NoSmsSentException();
+            throw new SmsResponseNotFoundException();
         }
 
-        $this->last = $this->originalNumbers()[$count - 1];
+        $number = $this->originalNumbers()[$count - 1];
 
-        return $this->last;
+        return $this->last = $this->get($number);
     }
 
     /**
      * {@inheritdoc}
      */
-    public function get($number = null)
+    public function get(string $number)
     {
         if (isset($this->responses[$number])) {
             return $this->responses[$number];
@@ -137,7 +135,7 @@ class SmsResponseBag extends SmsResponseBagAbstract
             return $this->responses[$originalNumber];
         }
 
-        return null;
+        throw new SmsResponseNotFoundException($number);
     }
 
     /**
