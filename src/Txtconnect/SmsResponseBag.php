@@ -3,12 +3,18 @@
 namespace Prinx\Txtconnect;
 
 use Prinx\Txtconnect\Abstracts\SmsResponseBagAbstract;
+use Prinx\Txtconnect\Exceptions\NoSmsSentException;
 use Prinx\Txtconnect\Traits\ResponseBagCallback;
 
 class SmsResponseBag extends SmsResponseBagAbstract
 {
     use ResponseBagCallback;
 
+    /**
+     * Has SMS reached TxtConnect?
+     *
+     * @var bool
+     */
     protected $isBeingProcessed = false;
 
     /**
@@ -26,7 +32,7 @@ class SmsResponseBag extends SmsResponseBagAbstract
     /**
      * Original numbers.
      *
-     * @var array|null
+     * @var array
      */
     protected $originalNumbers;
 
@@ -38,14 +44,21 @@ class SmsResponseBag extends SmsResponseBagAbstract
     protected $numberMap = [];
 
     /**
-     * @var \Prinx\Txtconnect\SmsResponse|false|null
+     * Number of SmsResponse in the bag.
+     *
+     * @var int
      */
-    protected $first = false;
+    protected $count = 0;
 
     /**
-     * @var \Prinx\Txtconnect\SmsResponse|false|null
+     * @var \Prinx\Txtconnect\SmsResponse
      */
-    protected $last = false;
+    protected $first;
+
+    /**
+     * @var \Prinx\Txtconnect\SmsResponse
+     */
+    protected $last;
 
     /**
      * @param array  $isBeingProcessed Has SMS reached TxtConnect?
@@ -74,28 +87,19 @@ class SmsResponseBag extends SmsResponseBagAbstract
      */
     public function first()
     {
-        if ($this->first !== false) {
+        if (!is_null($this->first)) {
             return $this->first;
         }
 
-        if (!$this->isBeingProcessed()) {
-            $this->first = null;
+        $numbers = $this->originalNumbers();
 
-            return null;
+        if (!isset($numbers[0])) {
+            throw new NoSmsSentException();
         }
 
-        $first = null;
-        $index = 0;
-        $length = count($this->originalNumbers());
+        $this->first = $numbers[0];
 
-        do {
-            $first = $this->get($this->originalNumbers()[$index]);
-            ++$index;
-        } while (is_null($first) && $index < $length);
-
-        $this->first = $first;
-
-        return $first;
+        return $this->first;
     }
 
     /**
@@ -103,27 +107,19 @@ class SmsResponseBag extends SmsResponseBagAbstract
      */
     public function last()
     {
-        if ($this->last !== false) {
+        if (!is_null($this->last)) {
             return $this->last;
         }
 
-        if (!$this->isBeingProcessed()) {
-            $this->last = null;
+        $count = $this->count();
 
-            return null;
+        if (!$count) {
+            throw new NoSmsSentException();
         }
 
-        $last = null;
-        $index = count($this->originalNumbers()) - 1;
+        $this->last = $this->originalNumbers()[$count - 1];
 
-        do {
-            $last = $this->get($this->originalNumbers()[$index]);
-            --$index;
-        } while (is_null($last) && $index >= 0);
-
-        $this->last = $last;
-
-        return $last;
+        return $this->last;
     }
 
     /**
@@ -178,5 +174,19 @@ class SmsResponseBag extends SmsResponseBagAbstract
     public function getError()
     {
         return $this->error;
+    }
+
+    /**
+     * Count the number of SmsResponse in the bag.
+     *
+     * @return int
+     */
+    public function count()
+    {
+        if (is_null($this->count)) {
+            $this->count = count($this->numberMap);
+        }
+
+        return$this->count;
     }
 }
