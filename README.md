@@ -14,7 +14,18 @@ composer require prinx/txtconnect
 
 ## Usage
 
-### Basic
+### Configuration
+
+Create a `.env` file at the root of your project (where the vendor folder is located), if none exists already.
+
+In the `.env` file specify your TxtConnect API credentials:
+
+```ini
+TXTCONNECT_KEY="api_key"
+TXTCONNECT_SENDER_ID="sender_id"
+```
+
+### Sending SMS
 
 ```php
 // require 'path/to/vendor/autoload.php'; // Not needed if using the package inside a framework.
@@ -48,7 +59,6 @@ The number is automatically sanitized, any space is removed and is international
 For example, the number +233242424242 can be passed as:
 
 - 024 24 24 242
-- 024 24 24      242 // Any space will be removed. You don't need to care about it
 - 233(0)24 24 24 242
 - 0 24 24-24-242
 - 024 2424 242
@@ -63,13 +73,10 @@ In that case, the package will automatically determine the country of the number
 If you don't have the number in international format, you can still send the SMS, just by setting the country yourself before calling the `send` method:
 
 ```php
-
 $sms = new Sms;
 
 $response = $sms->country('GH')->send($message, $phone);
 ```
-
-### Invalid numbers
 
 ## License
 
