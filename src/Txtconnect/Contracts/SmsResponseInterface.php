@@ -85,7 +85,7 @@ interface SmsResponseInterface
     public function getOriginalNumber();
 
     /**
-     * Raw response of the request.
+     * Raw response of the request for this SMS.
      *
      * @return string
      */
