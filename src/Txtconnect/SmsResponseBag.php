@@ -177,9 +177,7 @@ class SmsResponseBag extends SmsResponseBagAbstract
     }
 
     /**
-     * Count the number of SmsResponse in the bag.
-     *
-     * @return int
+     * {@inheritdoc}
      */
     public function count()
     {

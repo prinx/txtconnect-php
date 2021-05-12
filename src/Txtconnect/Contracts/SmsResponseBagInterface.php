@@ -42,8 +42,7 @@ interface SmsResponseBagInterface
     public function getResponses();
 
     /**
-     * Actual numbers SMS was sent to. This might be different from the
-     * original numbers because the numbers are sanitize before SMS is sent.
+     * Map of original numbers to parsed numbers.
      *
      * @return array
      */
@@ -62,4 +61,11 @@ interface SmsResponseBagInterface
      * @return string|null
      */
     public function getError();
+
+    /**
+     * Count the number of SmsResponse in the bag.
+     *
+     * @return int
+     */
+    public function count();
 }
