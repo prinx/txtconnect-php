@@ -1,6 +1,6 @@
 <?php
 
-namespace Prinx\Txtconnect;
+namespace Prinx\Txtconnect\Lib;
 
 use Prinx\Txtconnect\Abstracts\SmsResponseAbstract;
 

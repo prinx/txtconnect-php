@@ -4,6 +4,7 @@ namespace Prinx\Txtconnect;
 
 use Prinx\Txtconnect\Abstracts\SmsStatusAbstract;
 use Prinx\Txtconnect\Exceptions\UndefinedSmsMessageException;
+use Prinx\Txtconnect\Lib\Endpoint;
 
 class SmsStatus extends SmsStatusAbstract
 {

@@ -3,6 +3,7 @@
 namespace Prinx\Txtconnect;
 
 use Prinx\Txtconnect\Abstracts\BalanceAbstract;
+use Prinx\Txtconnect\Lib\Endpoint;
 
 class Balance extends BalanceAbstract
 {

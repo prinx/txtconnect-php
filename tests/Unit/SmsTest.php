@@ -3,7 +3,7 @@
 namespace Tests\Unit;
 
 use Prinx\Txtconnect\Contracts\SmsResponseBagInterface;
-use Prinx\Txtconnect\ResponseCode;
+use Prinx\Txtconnect\Lib\ResponseCode;
 use Prinx\Txtconnect\Sms;
 use Tests\TestCase;
 

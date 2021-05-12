@@ -3,6 +3,7 @@
 namespace Prinx\Txtconnect;
 
 use Prinx\Txtconnect\Abstracts\InboxAbstract;
+use Prinx\Txtconnect\Lib\Endpoint;
 
 class Inbox extends InboxAbstract
 {
