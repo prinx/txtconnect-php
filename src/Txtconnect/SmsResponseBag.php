@@ -48,7 +48,7 @@ class SmsResponseBag extends SmsResponseBagAbstract
      *
      * @var int
      */
-    protected $count = 0;
+    protected $count;
 
     /**
      * @var \Prinx\Txtconnect\SmsResponse
