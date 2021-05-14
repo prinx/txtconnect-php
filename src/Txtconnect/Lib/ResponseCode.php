@@ -43,6 +43,11 @@ class ResponseCode
         return self::$messages[$code] ?? '';
     }
 
+    /**
+     * All responses codes.
+     *
+     * @return string[]
+     */
     public static function codes()
     {
         return array_keys(self::$messages);
