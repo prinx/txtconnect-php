@@ -12,6 +12,7 @@ class SmsResponse extends SmsResponseAbstract
     protected $parsedNumber = null;
     protected $originalNumber = null;
     protected $isOk = null;
+    protected $sms;
 
     const OK = 'ok';
     const ERROR = 'error';
@@ -25,11 +26,12 @@ class SmsResponse extends SmsResponseAbstract
      *
      * @return $this
      */
-    public function __construct($response, $originalNumber, $parsedNumber)
+    public function __construct($response, $sms, $originalNumber, $parsedNumber)
     {
         $this->rawResponse = is_string($response) ? $response : $response->getContent(false);
         $this->parsedNumber = $parsedNumber;
         $this->originalNumber = $originalNumber;
+        $this->sms = $sms;
 
         if (is_string($response)) {
             $this->error = $response;
@@ -90,6 +92,14 @@ class SmsResponse extends SmsResponseAbstract
     public function getBalance()
     {
         return $this->getResponse('balance', null);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getSms()
+    {
+        return $this->sms;
     }
 
     /**
