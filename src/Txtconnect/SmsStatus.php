@@ -36,7 +36,8 @@ class SmsStatus extends SmsStatusAbstract
         foreach ($this->client()->stream($responses) as $response => $chunk) {
             if ($chunk->isLast()) {
                 $key = $response->getInfo('user_data');
-                $this->raw[$key] = $response->toArray();
+                // Look at this at the API level. Should not have to do $response->toArray()[0], instead $response->toArray().
+                $this->raw[$key] = $response->toArray()[0];
             }
         }
 
@@ -62,7 +63,7 @@ class SmsStatus extends SmsStatusAbstract
      */
     public function of($batchNumbers)
     {
-        if (!$batchNumbers && !is_iterable($batchNumbers) && !is_string($batchNumbers)) {
+        if (!$batchNumbers || (!is_iterable($batchNumbers) && !is_string($batchNumbers))) {
             return $this;
         }
 
@@ -95,8 +96,6 @@ class SmsStatus extends SmsStatusAbstract
         }
 
         $count = count($this->sent);
-
-        var_dump($this->sent);
 
         if (!$batchNumber && $count > 1) {
             throw new \InvalidArgumentException('The batch number of the Sms to choose must be specified when retrieving the status of more than one Sms.');
