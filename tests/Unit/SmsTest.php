@@ -2,7 +2,6 @@
 
 namespace Tests\Unit;
 
-use Prinx\Txtconnect\Contracts\SmsResponseBagInterface;
 use Prinx\Txtconnect\Lib\ResponseCode;
 use Prinx\Txtconnect\Sms;
 use Prinx\Txtconnect\SmsStatus;
@@ -15,6 +14,9 @@ class SmsTest extends TestCase
         $this->message = 'Hi';
         $this->originalNumber = '233(0) 54 54-66-796';
         $this->parsedNumber = '233545466796';
+
+        $this->response1 = (new Sms())->country('GH')->send($this->message, $this->originalNumber);
+        $this->response2 = (new Sms())->country('GH')->send($this->message, $this->originalNumber);
     }
 
     /**
@@ -22,154 +24,159 @@ class SmsTest extends TestCase
      */
     public function testCanSendSuccessfullySms()
     {
-        $sms = new Sms();
-
-        $response = $sms->country('GH')->send($this->message, $this->originalNumber);
-
-        $this->assertTrue($response->isBeingProcessed());
-
-        return $response;
+        $this->assertTrue($this->response1->isBeingProcessed());
+        $this->assertTrue($this->response2->isBeingProcessed());
+        $this->assertTrue($this->response3->isBeingProcessed());
     }
 
-    /**
-     * @depends testCanSendSuccessfullySms
-     *
-     * @param SmsResponseBagInterface $response
-     */
-    public function testIsOk($response)
+    public function testIsOk()
     {
-        $this->assertTrue($response->first()->isOk());
-        $this->assertTrue($response->last()->isOk());
+        $this->assertTrue($this->response1->first()->isOk());
+        $this->assertTrue($this->response1->last()->isOk());
 
-        $this->assertTrue($response->get($this->originalNumber)->isOk());
-        $this->assertTrue($response->get($this->originalNumber)->isOk());
+        $this->assertTrue($this->response1->get($this->originalNumber)->isOk());
+        $this->assertTrue($this->response1->get($this->originalNumber)->isOk());
 
-        $this->assertTrue($response->get($this->parsedNumber)->isOk());
-        $this->assertTrue($response->get($this->parsedNumber)->isOk());
+        $this->assertTrue($this->response1->get($this->parsedNumber)->isOk());
+        $this->assertTrue($this->response1->get($this->parsedNumber)->isOk());
     }
 
-    /**
-     * @depends testCanSendSuccessfullySms
-     *
-     * @param SmsResponseBagInterface $response
-     */
-    public function testGettingProperFirst($response)
+    public function testGettingProperFirst()
     {
-        $this->assertSame($response->first(), $response->get($this->originalNumber));
-        $this->assertSame($response->first(), $response->get($this->parsedNumber));
+        $this->assertSame($this->response1->first(), $this->response1->get($this->originalNumber));
+        $this->assertSame($this->response1->first(), $this->response1->get($this->parsedNumber));
     }
 
-    /**
-     * @depends testCanSendSuccessfullySms
-     *
-     * @param SmsResponseBagInterface $response
-     */
-    public function testGettingProperLast($response)
+    public function testGettingProperLast()
     {
-        $this->assertSame($response->last(), $response->get($this->originalNumber));
-        $this->assertSame($response->last(), $response->get($this->parsedNumber));
+        $this->assertSame($this->response1->last(), $this->response1->get($this->originalNumber));
+        $this->assertSame($this->response1->last(), $this->response1->get($this->parsedNumber));
     }
 
-    /**
-     * @depends testCanSendSuccessfullySms
-     *
-     * @param SmsResponseBagInterface $response
-     */
-    public function testResolvingNumbersWell($response)
+    public function testResolvingNumbersWell()
     {
-        $this->assertEquals([$this->originalNumber => $this->parsedNumber], $response->numbers());
-        $this->assertEquals([$this->originalNumber], $response->originalNumbers());
+        $this->assertEquals([$this->originalNumber => $this->parsedNumber], $this->response1->numbers());
+        $this->assertEquals([$this->originalNumber], $this->response1->originalNumbers());
 
-        $this->assertEquals($this->parsedNumber, $response->first()->getParsedNumber());
-        $this->assertEquals($this->parsedNumber, $response->last()->getParsedNumber());
+        $this->assertEquals($this->parsedNumber, $this->response1->first()->getParsedNumber());
+        $this->assertEquals($this->parsedNumber, $this->response1->last()->getParsedNumber());
 
-        $this->assertEquals($this->originalNumber, $response->first()->getOriginalNumber());
-        $this->assertEquals($this->originalNumber, $response->last()->getOriginalNumber());
+        $this->assertEquals($this->originalNumber, $this->response1->first()->getOriginalNumber());
+        $this->assertEquals($this->originalNumber, $this->response1->last()->getOriginalNumber());
 
-        $this->assertEquals($this->parsedNumber, $response->get($this->originalNumber)->getParsedNumber());
-        $this->assertEquals($this->parsedNumber, $response->get($this->originalNumber)->getParsedNumber());
+        $this->assertEquals($this->parsedNumber, $this->response1->get($this->originalNumber)->getParsedNumber());
+        $this->assertEquals($this->parsedNumber, $this->response1->get($this->originalNumber)->getParsedNumber());
 
-        $this->assertEquals($this->parsedNumber, $response->get($this->parsedNumber)->getParsedNumber());
-        $this->assertEquals($this->parsedNumber, $response->get($this->parsedNumber)->getParsedNumber());
+        $this->assertEquals($this->parsedNumber, $this->response1->get($this->parsedNumber)->getParsedNumber());
+        $this->assertEquals($this->parsedNumber, $this->response1->get($this->parsedNumber)->getParsedNumber());
 
-        $this->assertEquals($this->originalNumber, $response->get($this->originalNumber)->getOriginalNumber());
-        $this->assertEquals($this->originalNumber, $response->get($this->originalNumber)->getOriginalNumber());
+        $this->assertEquals($this->originalNumber, $this->response1->get($this->originalNumber)->getOriginalNumber());
+        $this->assertEquals($this->originalNumber, $this->response1->get($this->originalNumber)->getOriginalNumber());
 
-        $this->assertEquals($this->originalNumber, $response->get($this->parsedNumber)->getOriginalNumber());
-        $this->assertEquals($this->originalNumber, $response->get($this->parsedNumber)->getOriginalNumber());
+        $this->assertEquals($this->originalNumber, $this->response1->get($this->parsedNumber)->getOriginalNumber());
+        $this->assertEquals($this->originalNumber, $this->response1->get($this->parsedNumber)->getOriginalNumber());
     }
 
-    /**
-     * @depends testCanSendSuccessfullySms
-     *
-     * @param SmsResponseBagInterface $response
-     */
-    public function testGettingRightError($response)
+    public function testGettingRightError()
     {
-        $this->assertNull($response->getError());
-        $this->assertNull($response->first()->getError());
+        $this->assertNull($this->response1->getError());
+        $this->assertNull($this->response1->first()->getError());
     }
 
-    /**
-     * @depends testCanSendSuccessfullySms
-     *
-     * @param SmsResponseBagInterface $response
-     */
-    public function testGettingRightCode($response)
+    public function testGettingRightCode()
     {
-        $this->assertEquals($response->first()->getCode(), ResponseCode::OK);
+        $this->assertEquals($this->response1->first()->getCode(), ResponseCode::OK);
     }
 
-    /**
-     * @depends testCanSendSuccessfullySms
-     *
-     * @param SmsResponseBagInterface $response
-     */
-    public function testUsernameIsString($response)
+    public function testUsernameIsString()
     {
-        $this->assertIsString($response->first()->getUserName());
+        $this->assertIsString($this->response1->first()->getUserName());
     }
 
-    /**
-     * @depends testCanSendSuccessfullySms
-     *
-     * @param SmsResponseBagInterface $response
-     */
-    public function testStatusCheckUrlIsString($response)
+    public function testStatusCheckUrlIsString()
     {
-        $this->assertIsString($response->first()->getStatusCheckUrl());
+        $this->assertIsString($this->response1->first()->getStatusCheckUrl());
     }
 
-    /**
-     * @depends testCanSendSuccessfullySms
-     *
-     * @param SmsResponseBagInterface $response
-     */
-    public function testRawResponseIsString($response)
+    public function testRawResponseIsString()
     {
-        $this->assertIsString($response->first()->getRawResponse());
+        $this->assertIsString($this->response1->first()->getRawResponse());
     }
 
-    /**
-     * @depends testCanSendSuccessfullySms
-     *
-     * @param SmsResponseBagInterface $response
-     */
-    public function testBatchNumberIsString($response)
+    public function testBatchNumberIsString()
     {
-        $this->assertIsString($response->first()->getBatchNumber());
+        $this->assertIsString($this->response1->first()->getBatchNumber());
     }
 
-    /**
-     * @depends testCanSendSuccessfullySms
-     *
-     * @param SmsResponseBagInterface $response
-     */
-    public function testGetSmsStatus($response)
+    public function testGetOneSmsStatusWithGet()
     {
-        $status = (new SmsStatus())->of($response->first()->getBatchNumber())->get();
-        $this->assertEquals($response->first()->getParsedNumber(), $status->recipient());
-        $this->assertEquals($response->first()->getMessage(), $status->text());
-        $this->assertContains($response->first()->getCode(), ResponseCode::codes());
+        $status = (new SmsStatus())->of($this->response1->first()->getBatchNumber())->get();
+        $this->assertEquals($this->response1->first()->getParsedNumber(), $status->recipient());
+        $this->assertEquals($this->response1->first()->getMessage(), $status->text());
+        $this->assertContains($this->response1->first()->getCode(), ResponseCode::codes());
+    }
+
+    public function testGetOneSmsStatusWithFirst()
+    {
+        $status = (new SmsStatus())->of($this->response1->first()->getBatchNumber())->first();
+        $this->assertEquals($this->response1->first()->getParsedNumber(), $status->recipient());
+        $this->assertEquals($this->response1->first()->getMessage(), $status->text());
+        $this->assertContains($this->response1->first()->getCode(), ResponseCode::codes());
+    }
+
+    public function testGetOneSmsStatusWithLast()
+    {
+        $status = (new SmsStatus())->of($this->response1->first()->getBatchNumber())->last();
+        $this->assertEquals($this->response1->first()->getParsedNumber(), $status->recipient());
+        $this->assertEquals($this->response1->first()->getMessage(), $status->text());
+        $this->assertContains($this->response1->first()->getCode(), ResponseCode::codes());
+    }
+
+    public function testGetFirstSmsStatusFromTwo()
+    {
+        $status = (new SmsStatus())
+            ->of($this->response1->first()->getBatchNumber())
+            ->of($this->response2->first()->getBatchNumber())
+            ->first();
+
+        $this->assertEquals($this->response1->first()->getParsedNumber(), $status->recipient());
+        $this->assertEquals($this->response1->first()->getMessage(), $status->text());
+        $this->assertContains($this->response1->first()->getCode(), ResponseCode::codes());
+    }
+
+    public function testGetLastSmsStatusFromTwo()
+    {
+        $status = (new SmsStatus())
+            ->of($this->response1->first()->getBatchNumber())
+            ->of($this->response2->first()->getBatchNumber())
+            ->last();
+
+        $this->assertEquals($this->response2->first()->getParsedNumber(), $status->recipient());
+        $this->assertEquals($this->response2->first()->getMessage(), $status->text());
+        $this->assertContains($this->response2->first()->getCode(), ResponseCode::codes());
+    }
+
+    public function testGetFirstSmsStatusFromTwoWithGet()
+    {
+        $status = (new SmsStatus())
+            ->of($this->response1->first()->getBatchNumber())
+            ->of($this->response2->first()->getBatchNumber())
+            ->get($this->response1->first()->getBatchNumber());
+
+        $this->assertEquals($this->response1->first()->getParsedNumber(), $status->recipient());
+        $this->assertEquals($this->response1->first()->getMessage(), $status->text());
+        $this->assertContains($this->response1->first()->getCode(), ResponseCode::codes());
+    }
+
+    public function testGeLastSmsStatusFromTwoWithGet()
+    {
+        $status = (new SmsStatus())
+            ->of($this->response1->first()->getBatchNumber())
+            ->of($this->response2->first()->getBatchNumber())
+            ->get($this->response2->first()->getBatchNumber());
+
+        $this->assertEquals($this->response2->first()->getParsedNumber(), $status->recipient());
+        $this->assertEquals($this->response2->first()->getMessage(), $status->text());
+        $this->assertContains($this->response2->first()->getCode(), ResponseCode::codes());
     }
 }
