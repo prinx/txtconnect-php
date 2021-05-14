@@ -62,6 +62,10 @@ class SmsStatus extends SmsStatusAbstract
      */
     public function of($batchNumbers)
     {
+        if (!$batchNumbers || !is_iterable($batchNumbers) || !is_string($batchNumbers)) {
+            return $this;
+        }
+
         if (is_string($batchNumbers)) {
             $batchNumbers = [$batchNumbers];
         }
