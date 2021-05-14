@@ -4,7 +4,7 @@ namespace Prinx\Txtconnect\Abstracts;
 
 use Prinx\Txtconnect\Exceptions\UndefinedSmsMessageContentException;
 use Prinx\Txtconnect\Exceptions\UndefinedSmsMessageException;
-use Prinx\Txtconnect\SmsMessage;
+use Prinx\Txtconnect\Lib\SmsMessage;
 
 abstract class SmsBagAbstract extends ApiAbstract
 {
@@ -38,7 +38,6 @@ abstract class SmsBagAbstract extends ApiAbstract
     {
         $allRaw = $this->nth();
 
-
         foreach ($allRaw as $index => $item) {
             if (!isset($this->items[$index])) {
                 $this->items[$index] = new SmsMessage($item, $index);
@@ -71,10 +70,12 @@ abstract class SmsBagAbstract extends ApiAbstract
     /**
      * Get nth message item.
      *
-     * @param int|null $index
-     * @param string   $key
+     * Returns the whole SmsBag if index is null.
      *
-     * @return SMsMessage[]|SmsMessage|array|mixed
+     * @param int|null $index Index of the SmsMessage to return.
+     * @param string   $key   Key of the SmsMessage to return. If Not passed the whole nth SmsMessage is return
+     *
+     * @return SmsMessage[]|SmsMessage|array|mixed
      */
     public function nth($index = null, $key = '')
     {
