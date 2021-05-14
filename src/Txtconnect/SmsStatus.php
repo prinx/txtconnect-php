@@ -80,11 +80,24 @@ class SmsStatus extends SmsStatusAbstract
     /**
      * Get the status corresponding to the batch number.
      *
+     * If fetching status for only one SMS, you do not need to pass the batch number.
+     *
      * @return SmsMessage|array|mixed
      */
-    public function get(string $batchNumber, string $key = '')
+    public function get(string $batchNumber = '', string $key = '')
     {
-        $index = array_search($batchNumber, $this->sent, true);
+        $count = count($this->sent);
+
+        if (!$batchNumber && $count > 1) {
+            throw new \InvalidArgumentException('The batch number of the Sms to choose must be specified when retrieving the status of more than one Sms.');
+        }
+
+        // If batch number not passed and fetching status for only one SMS, take the first Sms in the bag
+        if (!$batchNumber && $count === 1) {
+            $index = 0;
+        } else {
+            $index = array_search($batchNumber, $this->sent, true);
+        }
 
         if ($index === false) {
             throw new UndefinedSmsMessageException($batchNumber);
