@@ -55,7 +55,7 @@ class Sms extends SmsAbstract
 
             if (in_array($parsed, self::UNSUPPORTED_NUMBERS, true)) {
                 $error = $this->getUnsupportedNumberError($parsed);
-                $smsResponses[$original] = new SmsResponse($error, $original, $parsed);
+                $smsResponses[$original] = new SmsResponse($error, $params['sms'], $original, $parsed);
                 continue;
             }
 
@@ -75,7 +75,7 @@ class Sms extends SmsAbstract
         foreach ($this->client()->stream($responses) as $response => $chunk) {
             if ($chunk->isLast()) {
                 [$originalNumber, $parsedNumber] = $response->getInfo('user_data');
-                $smsResponses[$originalNumber] = new SmsResponse($response, $originalNumber, $parsedNumber);
+                $smsResponses[$originalNumber] = new SmsResponse($response, $params['sms'],  $originalNumber, $parsedNumber);
                 $isBeingProcessed = true;
             }
         }
