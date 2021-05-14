@@ -57,6 +57,13 @@ interface SmsResponseInterface
     public function getBalance();
 
     /**
+     * Get SMS sent.
+     *
+     * @return string
+     */
+    public function getSms();
+
+    /**
      * Message attached to the status of the SMS request.
      *
      * @return string|null
