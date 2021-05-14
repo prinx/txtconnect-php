@@ -42,4 +42,9 @@ class ResponseCode
 
         return self::$messages[$code] ?? '';
     }
+
+    public static function codes()
+    {
+        return array_keys(self::$messages);
+    }
 }
