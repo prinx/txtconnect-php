@@ -5,6 +5,7 @@ namespace Tests\Unit;
 use Prinx\Txtconnect\Contracts\SmsResponseBagInterface;
 use Prinx\Txtconnect\Lib\ResponseCode;
 use Prinx\Txtconnect\Sms;
+use Prinx\Txtconnect\SmsStatus;
 use Tests\TestCase;
 
 class SmsTest extends TestCase
@@ -124,16 +125,6 @@ class SmsTest extends TestCase
      *
      * @param SmsResponseBagInterface $response
      */
-    public function testBatchNumberIsString($response)
-    {
-        $this->assertIsString($response->first()->getBatchNumber());
-    }
-
-    /**
-     * @depends testCanSendSuccessfullySms
-     *
-     * @param SmsResponseBagInterface $response
-     */
     public function testUsernameIsString($response)
     {
         $this->assertIsString($response->first()->getUserName());
@@ -146,8 +137,7 @@ class SmsTest extends TestCase
      */
     public function testStatusCheckUrlIsString($response)
     {
-        $checkUrl = $response->first()->getStatusCheckUrl();
-        $this->assertIsString($checkUrl);
+        $this->assertIsString($response->first()->getStatusCheckUrl());
     }
 
     /**
@@ -158,5 +148,28 @@ class SmsTest extends TestCase
     public function testRawResponseIsString($response)
     {
         $this->assertIsString($response->first()->getRawResponse());
+    }
+
+    /**
+     * @depends testCanSendSuccessfullySms
+     *
+     * @param SmsResponseBagInterface $response
+     */
+    public function testBatchNumberIsString($response)
+    {
+        $this->assertIsString($response->first()->getBatchNumber());
+    }
+
+    /**
+     * @depends testCanSendSuccessfullySms
+     *
+     * @param SmsResponseBagInterface $response
+     */
+    public function testGetSmsStatus($response)
+    {
+        $status = (new SmsStatus())->of($response->first()->getBatchNumber())->get();
+        $this->assertEquals($response->first()->getParsedNumber(), $status->recipient());
+        $this->assertEquals($response->first()->getMessage(), $status->text());
+        $this->assertContains($response->first()->getCode(), ResponseCode::codes());
     }
 }
