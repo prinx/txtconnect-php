@@ -83,8 +83,8 @@ abstract class SmsBagAbstract extends ApiAbstract
             $this->fetch();
         }
 
-        if (!$index) {
-            return $this->payload;
+        if (is_null($index)) {
+            return $this->raw;
         }
 
         if (!isset($this->raw[$index])) {
