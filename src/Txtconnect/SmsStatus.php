@@ -62,7 +62,7 @@ class SmsStatus extends SmsStatusAbstract
      */
     public function of($batchNumbers)
     {
-        if (!$batchNumbers || !is_iterable($batchNumbers) || !is_string($batchNumbers)) {
+        if (!$batchNumbers && !is_iterable($batchNumbers) && !is_string($batchNumbers)) {
             return $this;
         }
 
@@ -95,6 +95,8 @@ class SmsStatus extends SmsStatusAbstract
         }
 
         $count = count($this->sent);
+
+        var_dump($this->sent);
 
         if (!$batchNumber && $count > 1) {
             throw new \InvalidArgumentException('The batch number of the Sms to choose must be specified when retrieving the status of more than one Sms.');
