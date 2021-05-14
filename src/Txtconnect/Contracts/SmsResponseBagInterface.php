@@ -14,7 +14,7 @@ interface SmsResponseBagInterface
     /**
      * First Sms processed response.
      *
-     * @return \Prinx\Txtconnect\SmsResponse
+     * @return \Prinx\Txtconnect\Contracts\SmsResponseInterface
      *
      * @throws \Prinx\Txtconnect\Exceptions\SmsResponseNotFoundException
      */
@@ -23,7 +23,7 @@ interface SmsResponseBagInterface
     /**
      * Last Sms processed response.
      *
-     * @return \Prinx\Txtconnect\SmsResponse
+     * @return \Prinx\Txtconnect\Contracts\SmsResponseInterface
      *
      * @throws \Prinx\Txtconnect\Exceptions\SmsResponseNotFoundException
      */
@@ -32,7 +32,7 @@ interface SmsResponseBagInterface
     /**
      * Get response for specified number.
      *
-     * @return \Prinx\Txtconnect\SmsResponse
+     * @return \Prinx\Txtconnect\Contracts\SmsResponseInterface
      *
      * @throws \Prinx\Txtconnect\Exceptions\SmsResponseNotFoundException
      */
