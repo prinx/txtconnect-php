@@ -86,6 +86,10 @@ class SmsStatus extends SmsStatusAbstract
      */
     public function get(string $batchNumber = '', string $key = '')
     {
+        if (is_null($this->raw)) {
+            $this->fetch();
+        }
+
         $count = count($this->sent);
 
         if (!$batchNumber && $count > 1) {
