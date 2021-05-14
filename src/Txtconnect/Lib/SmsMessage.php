@@ -69,8 +69,8 @@ class SmsMessage
 
     public function content($key = '')
     {
-        if (!isset($this->content[$key])) {
-            throw new \InvalidArgumentException('Key '.$key.' not defined on InboxItem content.');
+        if ($key && !isset($this->content[$key])) {
+            throw new \InvalidArgumentException('Key '.$key.' not defined in Sms content.');
         }
 
         return $key ? $this->content[$key] : $this->content;
