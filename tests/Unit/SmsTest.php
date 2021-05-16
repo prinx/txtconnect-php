@@ -100,8 +100,14 @@ class SmsTest extends TestCase
 
     public function testResolvingNumbersWell()
     {
-        $this->assertEquals([self::$originalNumber => self::$parsedNumber], self::$response3->numbers());
-        $this->assertEquals([self::$originalNumber], self::$response3->originalNumbers());
+        $this->assertEquals([
+            self::$originalNumber => self::$parsedNumber,
+            self::$originalNumber2 => self::$parsedNumber2,
+        ], self::$response3->numbers());
+        $this->assertEquals(
+            [self::$originalNumber, self::$originalNumber2],
+            self::$response3->originalNumbers()
+        );
 
         $this->assertEquals(self::$parsedNumber, self::$response3->first()->getParsedNumber());
         $this->assertEquals(self::$parsedNumber2, self::$response3->last()->getParsedNumber());
