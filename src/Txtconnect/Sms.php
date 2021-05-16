@@ -40,6 +40,8 @@ class Sms extends SmsAbstract
         $responses = [];
         $paramsType = $this->requestType();
 
+        $isBeingProcessed = false;
+
         foreach ($numberMap as $original => $parsed) {
             if ($this->removeDuplicate && $mainDuplicate = array_search($parsed, $this->sent)) {
                 $smsResponses[$original] = $smsResponses[$mainDuplicate];
@@ -64,8 +66,6 @@ class Sms extends SmsAbstract
             $this->sent[$original] = $parsed;
             $this->processed[$original] = $parsed;
         }
-
-        $isBeingProcessed = false;
 
         foreach ($this->client()->stream($responses) as $response => $chunk) {
             if ($chunk->isLast()) {
