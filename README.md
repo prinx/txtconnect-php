@@ -28,7 +28,7 @@ TXTCONNECT_SENDER_ID="sender_id"
 ### Sending SMS
 
 ```php
-// require 'path/to/vendor/autoload.php'; // Not needed if using the package inside a framework.
+require 'path/to/vendor/autoload.php'; // Not needed if using the package inside a framework.
 
 use Prinx\Txtconnect\Sms;
 
@@ -40,7 +40,7 @@ $sms = new Sms;
 $response = $sms->send($message, $number);
 ```
 
-### Specifying the HTTP method
+#### Specifying the HTTP method
 
 ```php
 use Prinx\Txtconnect\Sms;
@@ -52,7 +52,7 @@ $sms = new Sms;
 $response = $sms->send($message, $phone, $method);
 ```
 
-### Number formats
+#### Number formats
 
 The number is automatically sanitized, any space is removed and is internationalized. This allows to pass the number without worrying about the correct format.
 
@@ -70,7 +70,7 @@ Eg: +233 11 11 11 111
 
 In that case, the package will automatically determine the country of the number.
 
-### Specifying the default country
+#### Specifying the default country
 
 Specifying the default country allows you to send SMS using numbers in the national format of that country. For example, after specifying the default country as Ghana, you can send SMS to numbers like 024 24 24 242, without putting them in international format.
 
@@ -78,6 +78,28 @@ Specifying the default country allows you to send SMS using numbers in the natio
 $sms = new Sms;
 
 $response = $sms->country('GH')->send($message, $phone);
+```
+
+### Get SMS Inbox
+
+```php
+require 'path/to/vendor/autoload.php'; // Not needed if using the package inside a framework.
+
+use Prinx\Txtconnect\Inbox;
+
+$inbox = new Inbox();
+
+$inboxCount = $inbox->count(); // Number of SMS in the fetched Inbox.
+
+$allSmsToArray = $inbox->toArray(); // An array of all inbox SMS, each SMS being an array
+
+$allSms = $inbox->all(); // Array of all inbox SMS, each SMS being a SmsMessage instance
+
+$allSms = $inbox->get($phone); // Get an array of all SMS sent to this phone number
+
+$sms = $inbox->nth(2); // Return the second SmsMessage of the inbox
+
+$inbox->refresh(); // Prepare the inbox to be refetched.
 ```
 
 ## License
