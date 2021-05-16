@@ -11,7 +11,7 @@ class SmsResponse extends SmsResponseAbstract
     protected $error = null;
     protected $parsedNumber = null;
     protected $originalNumber = null;
-    protected $isOk = null;
+    protected $isBeingProcessed = null;
     protected $sms;
 
     const OK = 'ok';
@@ -45,13 +45,13 @@ class SmsResponse extends SmsResponseAbstract
     /**
      * {@inheritdoc}
      */
-    public function isOk()
+    public function isBeingProcessed()
     {
-        if (is_null($this->isOk)) {
-            $this->isOk = strtolower($this->getCode()) === self::OK;
+        if (is_null($this->isBeingProcessed)) {
+            $this->isBeingProcessed = strtolower($this->getCode()) === self::OK;
         }
 
-        return $this->isOk;
+        return $this->isBeingProcessed;
     }
 
     /**
