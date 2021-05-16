@@ -3,7 +3,6 @@
 namespace Prinx\Txtconnect;
 
 use Prinx\Txtconnect\Abstracts\SmsAbstract;
-use Prinx\Txtconnect\Contracts\SmsResponseBagInterface;
 use Prinx\Txtconnect\Exceptions\InvalidSenderNameException;
 use Prinx\Txtconnect\Lib\Endpoint;
 use Prinx\Txtconnect\Lib\SmsResponse;
@@ -84,17 +83,24 @@ class Sms extends SmsAbstract
             }
         }
 
+        // If only one SMS sent, return directly the SmsResponse instead of a SmsResponseBag
+        if (!$this->sendAsBag && count($this->processed) === 1) {
+            $this->reInit();
+    
+            return current($smsResponses);
+        }
+
+        $this->reInit();
+
+        return new SmsResponseBag($isBeingProcessed, $smsResponses, $numberMap);
+    }
+
+    public function reInit()
+    {
         // Reinit the Sms instance fot it to be able to receive other contacts to send SMS to.
         $this->sent = [];
         $this->phones = [];
         $this->processed = [];
-
-        // If only one SMS sent, return directly the SmsResponse instead of a SmsResponseBag
-        if (!$this->sendAsBag && count($this->processed) === 1) {
-            return current($smsResponses);
-        }
-
-        return new SmsResponseBag($isBeingProcessed, $smsResponses, $numberMap);
     }
 
     /**
@@ -293,7 +299,7 @@ class Sms extends SmsAbstract
      * If `true`, will a single message sent will be treated as an Sms bag and will return a
      * SmsResponseBag. Then you will need to access the SmsResponse via `$response->first()` or
      * `$response->get($number)`.
-     * If `false`, an SMS sent to only one number will return a SmsResponse and an SMS sent to more 
+     * If `false`, an SMS sent to only one number will return a SmsResponse and an SMS sent to more
      * than one number will return a SmsResponseBag.
      *
      * @return $this
