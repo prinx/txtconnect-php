@@ -9,7 +9,6 @@ use Prinx\Txtconnect\Lib\PhoneNumber;
 use Prinx\Txtconnect\Lib\SmsResponse;
 use Prinx\Txtconnect\Lib\SmsResponseBag;
 use function Prinx\Dotenv\env;
-use libphonenumber\NumberParseException;
 
 class Sms extends SmsAbstract
 {
@@ -79,7 +78,7 @@ class Sms extends SmsAbstract
         // If only one SMS sent, return directly the SmsResponse instead of a SmsResponseBag
         if (!$this->sendAsBag && count($this->processed) === 1) {
             $this->reInit();
-    
+
             return current($smsResponses);
         }
 
