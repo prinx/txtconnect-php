@@ -80,6 +80,18 @@ $sms = new Sms;
 $response = $sms->country('GH')->send($message, $phone);
 ```
 
+### Get Balance
+
+```php
+require 'path/to/vendor/autoload.php'; // Not needed if using the package inside a framework.
+
+use Prinx\Txtconnect\Balance;
+
+$balance = new Balance();
+
+$amount = $balance->amount();
+```
+
 ### Get SMS Inbox
 
 ```php
