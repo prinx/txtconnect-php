@@ -87,7 +87,7 @@ class SmsStatus extends SmsStatusAbstract
      *
      * If fetching status for only one SMS, you do not need to pass the batch number.
      *
-     * @return SmsMessage|array|mixed
+     * @return SmsMessage
      */
     public function get(string $batchNumber = '')
     {
