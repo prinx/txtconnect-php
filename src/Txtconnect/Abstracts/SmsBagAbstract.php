@@ -36,9 +36,7 @@ abstract class SmsBagAbstract extends ApiAbstract
      */
     public function all()
     {
-        $allRaw = $this->nth();
-
-        foreach ($allRaw as $index => $item) {
+        foreach ($this->raw as $index => $item) {
             if (!isset($this->items[$index])) {
                 $this->items[$index] = new SmsMessage($item, $index);
             }
