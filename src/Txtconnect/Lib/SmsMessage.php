@@ -14,41 +14,77 @@ class SmsMessage
         $this->content['index'] = $index;
     }
 
+    /**
+     * @return int
+     */
     public function id()
     {
         return $this->content('id');
     }
 
+    /**
+     * Batch number.
+     *
+     * @return string
+     */
     public function batchNo()
     {
         return $this->content('batch_no');
     }
 
+    /**
+     * Sender Id used to send the SMS.
+     *
+     * @return string
+     */
     public function senderId()
     {
         return $this->content('from');
     }
 
+    /**
+     * Phone number SMS was sent to.
+     *
+     * @return string
+     */
     public function recipient()
     {
         return $this->content('phone');
     }
 
+    /**
+     * Text of the SMS.
+     *
+     * @return string
+     */
     public function text()
     {
         return $this->content('sms');
     }
 
+    /**
+     * Amount deducted when sending SMS.
+     *
+     * @return int
+     */
     public function amount()
     {
         return $this->content('amount');
     }
 
+    /**
+     * @return int
+     */
     public function segments()
     {
         return $this->content('segments');
     }
 
+    /**
+     * Status of the SMS.
+     *
+     * @return string
+     */
     public function status()
     {
         return $this->content('status');
