@@ -35,7 +35,7 @@ abstract class SmsBagAbstract extends ApiAbstract
      */
     public function all()
     {
-        foreach ($this->raw as $index => $item) {
+        foreach ($this->fetchedRaw() as $index => $item) {
             if (!isset($this->items[$index])) {
                 $this->items[$index] = new SmsMessage($item, $index);
             }
@@ -51,7 +51,7 @@ abstract class SmsBagAbstract extends ApiAbstract
      */
     public function toArray()
     {
-        return $this->raw;
+        return $this->fetchedRaw();
     }
 
     /**
@@ -85,16 +85,14 @@ abstract class SmsBagAbstract extends ApiAbstract
      */
     public function nth(int $index)
     {
-        if (is_null($this->raw)) {
-            $this->fetch();
-        }
+        $raw = $this->fetchedRaw();
 
-        if (!isset($this->raw[$index])) {
+        if (!isset($raw[$index])) {
             throw new UndefinedSmsMessageException($index);
         }
 
         if (!isset($this->items[$index])) {
-            $this->items[$index] = new SmsMessage($this->raw[$index], $index);
+            $this->items[$index] = new SmsMessage($raw[$index], $index);
         }
 
         return $this->items[$index];
@@ -114,7 +112,7 @@ abstract class SmsBagAbstract extends ApiAbstract
      */
     public function count()
     {
-        return count($this->raw);
+        return count($this->fetchedRaw());
     }
 
     public function isEmpty()
@@ -125,5 +123,14 @@ abstract class SmsBagAbstract extends ApiAbstract
     public function isNotEmpty()
     {
         return !$this->isEmpty();
+    }
+
+    public function fetchedRaw()
+    {
+        if (is_null($this->raw)) {
+            $this->fetch();
+        }
+
+        return $this->raw;
     }
 }

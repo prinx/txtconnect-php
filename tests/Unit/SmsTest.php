@@ -59,8 +59,6 @@ class SmsTest extends TestCase
         ->keepDuplicate()
         ->send(self::$message, [self::$originalNumber, self::$originalNumber2]);
 
-        var_dump(self::$response3);
-        
         self::$response4 = (new Sms())->asBag()->send(self::$message, self::$originalNumber);
     }
 
@@ -161,9 +159,7 @@ class SmsTest extends TestCase
     {
         $status = (new SmsStatus())->of(self::$response3->first()->getBatchNumber())->get();
 
-        var_dump($status->content());
         $this->assertEquals(self::$response3->first()->getParsedNumber(), $status->recipient());
-        var_dump(self::$response3->first()->getMessage(), $status->text());
         $this->assertEquals(self::$response3->first()->getSms(), $status->text());
         $this->assertContains(self::$response3->first()->getCode(), ResponseCode::codes());
     }
