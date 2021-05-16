@@ -54,30 +54,160 @@ $response = $sms->send($message, $phone, $method);
 
 #### Number formats
 
-The number is automatically sanitized, any space is removed and is internationalized. This allows to pass the number without worrying about the correct format.
+The number is automatically sanitized, any space, parenthesis, hyphen, is removed. This allows to pass the number without worrying about the correct format.
 
-For example, the number +233242424242 can be passed as:
+For example:
 
-- 024 24 24 242
+- +233 24 24 24 242
 - 233(0)24 24 24 242
-- 0 24 24-24-242
-- 024 2424 242
+- 233 24 24-24-242
 - etc
 
-The number can be sent in international format: starting with the '+' sign (OPTIONAL), then the country code then the number itself.
-
-Eg: +233 11 11 11 111
-
-In that case, the package will automatically determine the country of the number.
+The only constraint is the number has to be in an international format. This constraint can be ignored by specifying a default country.
 
 #### Specifying the default country
 
-Specifying the default country allows you to send SMS using numbers in the national format of that country. For example, after specifying the default country as Ghana, you can send SMS to numbers like 024 24 24 242, without putting them in international format.
+Specifying a default country allows to send SMS without worrying if the number is in international format or not. The package will automatically resolve and put the number in required format. For example, after specifying the default country as `Ghana`, you can send SMS to the number like 020 00 00 000, without putting it in international format.
 
 ```php
-$sms = new Sms;
+$sms = new Sms();
+
+$message = 'Hi';
+$phone = '020 00 00 000';
 
 $response = $sms->country('GH')->send($message, $phone);
+```
+
+#### Sending SMS to more than one number
+
+You can send SMS to many numbers at once just by adding the numbers as an array to the `send` method:
+
+```php
+$sms = new Sms();
+
+$message = 'Hi';
+$phones = ['233200000000', '233210000000', '233220000000'];
+
+$response = $sms->send($message, $phones);
+```
+
+#### Using the `to` method
+
+The phone numbers can be passed to the sms instance ahead of time, before calling the `send` method:
+
+```php
+$sms = new Sms();
+
+$message = 'Hi';
+$phone = '233200000000';
+
+$response = $sms->to($phone)->send($message);
+```
+
+And for more numbers:
+
+```php
+$sms = new Sms();
+
+$message = 'Hi';
+$phones = ['233200000000', '233210000000', '233220000000'];
+
+$response = $sms->to($phones)->send($message);
+```
+
+or
+
+```php
+$sms = new Sms();
+
+$sms->to('233200000000');
+$sms->to('233210000001');
+$sms->to('233220000002');
+
+$message = 'Hi';
+
+$response = $sms->send($message);
+```
+
+or
+
+```php
+$sms = new Sms();
+
+$message = 'Hi';
+
+$response = $sms->to('233200000000')
+        ->to('233210000001')
+        ->to('233220000002')
+        ->send($message);
+```
+
+#### Handling duplicate
+
+By default, the package handles automatically duplicate numbers and does not send sms to duplicate numbers (unless you explicitly activate sending to duplicate).
+
+##### Sending to duplicate
+
+If you wish to send sms to duplicate numbers, you can activate it by calling the `keepDuplicate` method on the sms instance.
+
+```php
+$sms = new Sms();
+
+$sms->to('233200000000');
+$sms->to('233200000000');
+$sms->to('233220000002');
+
+$message = 'Hi';
+
+$response = $sms->keepDuplicate()->send($message); // Sends to the first number twice then the third number.
+```
+
+##### Deactivate sending to duplicate
+
+If you wish to send sms to duplicate numbers, you can activate it by calling the `removeDuplicate` method on the sms instance.
+
+```php
+$sms = new Sms();
+
+$sms->to('233200000000');
+$sms->to('233200000000');
+$sms->to('233220000002');
+
+$message = 'Hi';
+
+$response = $sms->removeDuplicate()->send($message); // Sends to only two
+```
+
+#### Invalid numbers
+
+Sms will not be forwarded to invalid numbers.
+
+Invalid numbers are:
+
+- a number for which the package is not able to determine the country;
+- a number that is not a phone number;
+- a number that cannot receive an sms (a fixed phone number, for example).
+
+This allows you not to waste bandwidth to make HTTP request to numbers that will not get the message you are sending and at the same time allows not to waste you TXTCONNECT balance.
+
+#### Send SMS as unicode
+
+If the SMS contains UTF8 special characters, you can activate support for UTF8:
+
+```php
+$sms = new Sms();
+
+$response = $sms->asUnicode()->send('Hi 😄', '233200000000');
+```
+
+#### Send SMS as plain text (deactivate unicode)
+
+You can deactivate sending as unicode by calling:
+
+```php
+$sms = new Sms();
+
+$response = $sms->asPlainText()->send('Hi', '233200000000');
 ```
 
 ### Get SMS status
