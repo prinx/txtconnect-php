@@ -41,6 +41,7 @@ class Sms extends SmsAbstract
         $paramsType = $this->requestType();
 
         $isBeingProcessed = false;
+        $error = 'Request not sent to TXTCONNECT. Check individual SmsResponse for detail error(s)';
 
         foreach ($numberMap as $original => $parsed) {
             if ($this->removeDuplicate && $mainDuplicate = array_search($parsed, $this->sent)) {
@@ -65,6 +66,8 @@ class Sms extends SmsAbstract
 
             $this->sent[$original] = $parsed;
             $this->processed[$original] = $parsed;
+
+            $error = 'No response received from TXTCONNECT.';
         }
 
         foreach ($this->client()->stream($responses) as $response => $chunk) {
@@ -72,6 +75,7 @@ class Sms extends SmsAbstract
                 [$originalNumber, $parsedNumber] = $response->getInfo('user_data');
                 $smsResponses[$originalNumber] = new SmsResponse($response, $params['sms'], $originalNumber, $parsedNumber);
                 $isBeingProcessed = true;
+                $error = null;
             }
         }
 
@@ -84,7 +88,7 @@ class Sms extends SmsAbstract
 
         $this->reInit();
 
-        return new SmsResponseBag($isBeingProcessed, $smsResponses, $numberMap);
+        return new SmsResponseBag($isBeingProcessed, $smsResponses, $numberMap, $error);
     }
 
     public function reInit()
