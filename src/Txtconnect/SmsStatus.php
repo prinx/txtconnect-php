@@ -89,7 +89,7 @@ class SmsStatus extends SmsStatusAbstract
      *
      * @return SmsMessage|array|mixed
      */
-    public function get(string $batchNumber = '', string $key = '')
+    public function get(string $batchNumber = '')
     {
         if (is_null($this->raw)) {
             $this->fetch();
@@ -112,19 +112,19 @@ class SmsStatus extends SmsStatusAbstract
             throw new UndefinedSmsMessageException($batchNumber);
         }
 
-        return $this->nth($index, $key);
+        return $this->nth($index);
     }
 
     /**
      * {@inheritdoc}
      */
-    public function nth($index = null, $key = '')
+    public function nth($index = null)
     {
         if ($this->isDuplicate($index)) {
             $index = $this->getDuplicateRepresentantIndex($index);
         }
 
-        return parent::nth($index, $key);
+        return parent::nth($index);
     }
 
     public function isDuplicate($index)
