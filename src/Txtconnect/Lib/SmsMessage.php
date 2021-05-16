@@ -2,6 +2,8 @@
 
 namespace Prinx\Txtconnect\Lib;
 
+use Prinx\Txtconnect\Exceptions\UndefinedSmsMessageContentException;
+
 class SmsMessage
 {
     protected $content;
@@ -67,10 +69,19 @@ class SmsMessage
         return $this->content('index');
     }
 
+    /**
+     * Get SmsMessage content or key of content.
+     *
+     * @param string $key
+     *
+     * @return array|mixed
+     *
+     * @throws UndefinedSmsMessageContentException
+     */
     public function content($key = '')
     {
         if ($key && !isset($this->content[$key])) {
-            throw new \InvalidArgumentException('Key '.$key.' not defined in Sms content.');
+            throw new UndefinedSmsMessageContentException($this->index(), $key);
         }
 
         return $key ? $this->content[$key] : $this->content;

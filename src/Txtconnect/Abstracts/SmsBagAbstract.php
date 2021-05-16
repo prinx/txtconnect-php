@@ -2,7 +2,6 @@
 
 namespace Prinx\Txtconnect\Abstracts;
 
-use Prinx\Txtconnect\Exceptions\UndefinedSmsMessageContentException;
 use Prinx\Txtconnect\Exceptions\UndefinedSmsMessageException;
 use Prinx\Txtconnect\Lib\SmsMessage;
 
@@ -79,11 +78,12 @@ abstract class SmsBagAbstract extends ApiAbstract
      * Get nth message item.
      *
      * @param int $index Index of the SmsMessage to return.
-     * @param string   $key   Key of the SmsMessage to return. If Not passed the whole nth SmsMessage is return
      *
-     * @return SmsMessage[]|SmsMessage|array|mixed
+     * @return SmsMessage
+     *
+     * @throws UndefinedSmsMessageException If index not in the bag.
      */
-    public function nth(int $index, string $key = '')
+    public function nth(int $index)
     {
         if (is_null($this->raw)) {
             $this->fetch();
@@ -93,19 +93,11 @@ abstract class SmsBagAbstract extends ApiAbstract
             throw new UndefinedSmsMessageException($index);
         }
 
-        if (!$key) {
-            if (!isset($this->items[$index])) {
-                $this->items[$index] = new SmsMessage($this->raw[$index], $index);
-            }
-
-            return $this->items[$index];
+        if (!isset($this->items[$index])) {
+            $this->items[$index] = new SmsMessage($this->raw[$index], $index);
         }
 
-        if (!isset($this->raw[$index][$key])) {
-            throw new UndefinedSmsMessageContentException($index, $key);
-        }
-
-        return $this->items[$index][$key];
+        return $this->items[$index];
     }
 
     public function refresh()
