@@ -103,7 +103,7 @@ class Sms extends SmsAbstract
      *
      * @return array
      */
-    public function prepareParams($sms = '')
+    private function prepareParams($sms = '')
     {
         $smsParams = [
             'from' => $this->getFrom(),
@@ -114,7 +114,7 @@ class Sms extends SmsAbstract
         return array_replace($this->defaultParams(), $smsParams);
     }
 
-    public function getUnsupportedNumberError($number)
+    private function getUnsupportedNumberError($number)
     {
         switch ($number) {
             case PhoneNumber::CANNOT_RECEIVE_SMS:
