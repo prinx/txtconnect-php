@@ -44,7 +44,7 @@ class SmsStatus extends SmsStatusAbstract
         return $this;
     }
 
-    public function options($batchNumber, $index)
+    private function options($batchNumber, $index)
     {
         return [
             $this->requestType() => array_replace($this->defaultParams(), [
