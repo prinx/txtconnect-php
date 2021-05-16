@@ -283,6 +283,23 @@ $response1 = $response->first();
 $response3 = $response->last();
 ```
 
+#### Forcing SmsResponseBag
+
+You can force the `send` method to always return a `SmsResponseBag` weither the SMS has been sent to only one number or multiple numbers by calling the `asBag` method on the sms instance:
+
+```php
+$sms = new Sms();
+
+$response = $sms->asBag()->send('Hi', '233200000000'); // Will return a SmsResponseBag
+
+$smsResponse = $response->first();
+
+if ($smsResponse->isBeingProcessed()) {
+    // code
+}
+
+```
+
 ### Get SMS status
 
 ```php
