@@ -15,6 +15,8 @@ class BalanceTest extends TestCase
     public function testCanGetBalanceSuccessfully()
     {
         $balance = new Balance();
-        $this->assertIsInt($balance->value());
+        $this->assertIsInt($balance->amount());
+        $this->assertIsString($balance->user());
+        $this->assertEquals('Ghana', $balance->country());
     }
 }

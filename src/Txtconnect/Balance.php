@@ -27,7 +27,7 @@ class Balance extends BalanceAbstract
         return Endpoint::balance();
     }
 
-    public function value()
+    public function amount()
     {
         return $this->getOrRefresh('balance');
     }
@@ -39,7 +39,7 @@ class Balance extends BalanceAbstract
 
     public function country()
     {
-        return $this->getOrRefresh('user');
+        return $this->getOrRefresh('country');
     }
 
     public function getOrRefresh($key = '')
@@ -51,11 +51,6 @@ class Balance extends BalanceAbstract
         return $key ? $this->payload[$key] : $this->payload;
     }
 
-    /**
-     * Re-fetch balance the next time the user tries to get the balance value.
-     *
-     * @return $this
-     */
     public function refresh()
     {
         $this->fetched = false;
@@ -63,11 +58,6 @@ class Balance extends BalanceAbstract
         return $this;
     }
 
-    /**
-     * Raw response.
-     *
-     * @return string|null
-     */
     public function getRawResponse()
     {
         return $this->rawResponse;
