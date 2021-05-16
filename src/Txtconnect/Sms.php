@@ -13,13 +13,6 @@ use libphonenumber\NumberParseException;
 
 class Sms extends SmsAbstract
 {
-    const INVALID_NUMBER = 1;
-    const CANNOT_RECEIVE_SMS = 2;
-    const UNSUPPORTED_NUMBERS = [
-        self::INVALID_NUMBER,
-        self::CANNOT_RECEIVE_SMS,
-    ];
-
     protected $defaultCountry = null;
     protected $defaultCountryCode = null;
     protected $phones = [];
@@ -54,7 +47,7 @@ class Sms extends SmsAbstract
                 continue;
             }
 
-            if (in_array($parsed, self::UNSUPPORTED_NUMBERS, true)) {
+            if (in_array($parsed, PhoneNumber::UNSUPPORTED_NUMBERS, true)) {
                 $error = $this->getUnsupportedNumberError($parsed);
                 $smsResponses[$original] = new SmsResponse($error, $params['sms'], $original, $parsed);
                 $this->processed[$original] = $parsed;
@@ -124,7 +117,7 @@ class Sms extends SmsAbstract
     public function getUnsupportedNumberError($number)
     {
         switch ($number) {
-            case self::CANNOT_RECEIVE_SMS:
+            case PhoneNumber::CANNOT_RECEIVE_SMS:
                 return 'Number cannot receive SMS';
             default:
                 return 'Invalid number';
@@ -246,21 +239,7 @@ class Sms extends SmsAbstract
         $originalNumbers = $this->phones;
 
         $parsed = array_map(function ($phone) {
-            try {
-                $phone = PhoneNumber::parse($phone, $this->defaultCountry);
-            } catch (NumberParseException $th) {
-                return self::INVALID_NUMBER;
-            }
-
-            if (!PhoneNumber::isValidNumber($phone)) {
-                return self::INVALID_NUMBER;
-            }
-
-            if (!PhoneNumber::canReceiveSms($phone)) {
-                return self::CANNOT_RECEIVE_SMS;
-            }
-
-            return PhoneNumber::removePlus(PhoneNumber::formatE164($phone));
+            return PhoneNumber::sanitize($phone, $this->defaultCountry);
         }, $originalNumbers);
 
         // Duplication is handled when sending the request.

@@ -13,11 +13,43 @@ class PhoneNumber
     const SMS = 'sms';
     const VOICE = 'voice';
     const PLUS = '+';
+    const INVALID_NUMBER = '1';
+    const CANNOT_RECEIVE_SMS = '2';
+    const UNSUPPORTED_NUMBERS = [
+        self::INVALID_NUMBER,
+        self::CANNOT_RECEIVE_SMS,
+    ];
 
     /**
      * @var \libphonenumber\PhoneNumberUtil
      */
     protected static $phoneNumberLib;
+
+    /**
+     * Check a number is internationally valid, irrespective of the country.
+     *
+     * @param string|\libphonenumber\PhoneNumber $number
+     *
+     * @return string
+     */
+    public static function sanitize($number, string $region = null)
+    {
+        try {
+            $number = self::parse($number, $region);
+        } catch (NumberParseException $th) {
+            return self::INVALID_NUMBER;
+        }
+
+        if (!self::isValidNumber($number)) {
+            return self::INVALID_NUMBER;
+        }
+
+        if (!self::canReceiveSms($number)) {
+            return self::CANNOT_RECEIVE_SMS;
+        }
+
+        return self::removePlus(self::formatE164($number));
+    }
 
     /**
      * Map each contact with it country code. Map to NULL if invalid contact.

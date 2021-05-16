@@ -28,21 +28,7 @@ class Inbox extends InboxAbstract
 
     public function formatPhoneNumber($number)
     {
-        try {
-            $number = PhoneNumber::parse($number, $this->defaultCountry);
-        } catch (NumberParseException $th) {
-            return Sms::INVALID_NUMBER;
-        }
-
-        if (!PhoneNumber::isValidNumber($number)) {
-            return Sms::INVALID_NUMBER;
-        }
-
-        if (!PhoneNumber::canReceiveSms($number)) {
-            return Sms::CANNOT_RECEIVE_SMS;
-        }
-
-        return PhoneNumber::removePlus(PhoneNumber::formatE164($number));
+        
     }
 
     /**
@@ -52,7 +38,7 @@ class Inbox extends InboxAbstract
      */
     public function get(string $number)
     {
-        $number = $this->formatPhoneNumber($number);
+        $number = PhoneNumber::sanitize($number);
 
         if (!isset($this->keyByPhoneBag[$number])) {
             return $this->keyByPhoneBag[$number];
