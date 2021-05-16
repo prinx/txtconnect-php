@@ -3,6 +3,8 @@
 namespace Tests\Unit;
 
 use Prinx\Txtconnect\Lib\ResponseCode;
+use Prinx\Txtconnect\Lib\SmsResponse;
+use Prinx\Txtconnect\Lib\SmsResponseBag;
 use Prinx\Txtconnect\Sms;
 use Prinx\Txtconnect\SmsStatus;
 use Tests\TestCase;
@@ -11,9 +13,29 @@ class SmsTest extends TestCase
 {
     protected static $message;
     protected static $originalNumber;
+    protected static $originalNumber2;
     protected static $parsedNumber;
+    protected static $parsedNumber2;
+
+    /**
+     * @var SmsResponse
+     */
     protected static $response1;
+
+    /**
+     * @var SmsResponse
+     */
     protected static $response2;
+
+    /**
+     * @var SmsResponseBag
+     */
+    protected static $response3;
+
+    /**
+     * @var SmsResponseBag
+     */
+    protected static $response4;
 
     /**
      * @vcr send-successful-sms.json
@@ -21,96 +43,108 @@ class SmsTest extends TestCase
     public static function setUpBeforeClass(): void
     {
         self::$message = 'Hi';
+        
         self::$originalNumber = '233(0) 54 54-66-796';
         self::$parsedNumber = '233545466796';
+
+        self::$originalNumber2 = ' 0 54 54-66-796';
+        self::$parsedNumber2 = '233545466796';
+
+        self::$response1 = (new Sms())->send(self::$message, self::$originalNumber);
+
+        self::$response2 = (new Sms())->to(self::$originalNumber)->send(self::$message);
         
-        self::$response1 = (new Sms())->country('GH')->send(self::$message, self::$originalNumber);
-        self::$response2 = (new Sms())->country('GH')->send(self::$message, self::$originalNumber);
+        self::$response3 = (new Sms())->country('GH')
+        ->keepDuplicate()
+        ->send(self::$message, [self::$originalNumber, self::$originalNumber2]);
+
+        var_dump(self::$response3);
+        
+        self::$response4 = (new Sms())->asBag()->send(self::$message, self::$originalNumber);
+    }
+
+    public function testReturnProperResponse()
+    {
+        $this->assertInstanceOf(SmsResponse::class, self::$response1, 'Response 1 must be an instance of SmsResponse');
+        $this->assertInstanceOf(SmsResponse::class, self::$response2, 'Response 2 must be an instance of SmsResponse');
+        $this->assertInstanceOf(SmsResponseBag::class, self::$response3, 'Response 3 must be an instance of SmsResponseBag');
+        $this->assertInstanceOf(SmsResponseBag::class, self::$response4, 'Response 4 must be an instance of SmsResponseBag even though the sms was sent to only number, because we called asBag method on the Sms instance before sending the sms.');
     }
 
     public function testCanSendSuccessfullySms()
     {
         $this->assertTrue(self::$response1->isBeingProcessed());
         $this->assertTrue(self::$response2->isBeingProcessed());
+        $this->assertTrue(self::$response3->isBeingProcessed());
+        $this->assertTrue(self::$response4->isBeingProcessed());
     }
 
-    public function testIsOk()
+    public function testIsBeingProcessed()
     {
-        $this->assertTrue(self::$response1->first()->isOk());
-        $this->assertTrue(self::$response1->last()->isOk());
+        $this->assertTrue(self::$response3->first()->isBeingProcessed());
+        $this->assertTrue(self::$response3->last()->isBeingProcessed());
 
-        $this->assertTrue(self::$response1->get(self::$originalNumber)->isOk());
-        $this->assertTrue(self::$response1->get(self::$originalNumber)->isOk());
-
-        $this->assertTrue(self::$response1->get(self::$parsedNumber)->isOk());
-        $this->assertTrue(self::$response1->get(self::$parsedNumber)->isOk());
+        $this->assertTrue(self::$response3->get(self::$originalNumber)->isBeingProcessed());
+        $this->assertTrue(self::$response3->get(self::$originalNumber2)->isBeingProcessed());
     }
 
     public function testGettingProperFirst()
     {
-        $this->assertSame(self::$response1->first(), self::$response1->get(self::$originalNumber));
-        $this->assertSame(self::$response1->first(), self::$response1->get(self::$parsedNumber));
+        $this->assertSame(self::$response3->first(), self::$response3->get(self::$originalNumber));
     }
 
     public function testGettingProperLast()
     {
-        $this->assertSame(self::$response1->last(), self::$response1->get(self::$originalNumber));
-        $this->assertSame(self::$response1->last(), self::$response1->get(self::$parsedNumber));
+        $this->assertSame(self::$response3->last(), self::$response3->get(self::$originalNumber2));
     }
 
     public function testResolvingNumbersWell()
     {
-        $this->assertEquals([self::$originalNumber => self::$parsedNumber], self::$response1->numbers());
-        $this->assertEquals([self::$originalNumber], self::$response1->originalNumbers());
+        $this->assertEquals([self::$originalNumber => self::$parsedNumber], self::$response3->numbers());
+        $this->assertEquals([self::$originalNumber], self::$response3->originalNumbers());
 
-        $this->assertEquals(self::$parsedNumber, self::$response1->first()->getParsedNumber());
-        $this->assertEquals(self::$parsedNumber, self::$response1->last()->getParsedNumber());
+        $this->assertEquals(self::$parsedNumber, self::$response3->first()->getParsedNumber());
+        $this->assertEquals(self::$parsedNumber2, self::$response3->last()->getParsedNumber());
 
-        $this->assertEquals(self::$originalNumber, self::$response1->first()->getOriginalNumber());
-        $this->assertEquals(self::$originalNumber, self::$response1->last()->getOriginalNumber());
+        $this->assertEquals(self::$originalNumber, self::$response3->first()->getOriginalNumber());
+        $this->assertEquals(self::$originalNumber2, self::$response3->last()->getOriginalNumber());
 
-        $this->assertEquals(self::$parsedNumber, self::$response1->get(self::$originalNumber)->getParsedNumber());
-        $this->assertEquals(self::$parsedNumber, self::$response1->get(self::$originalNumber)->getParsedNumber());
+        $this->assertEquals(self::$parsedNumber, self::$response3->get(self::$originalNumber)->getParsedNumber());
+        $this->assertEquals(self::$parsedNumber, self::$response3->get(self::$originalNumber)->getParsedNumber());
 
-        $this->assertEquals(self::$parsedNumber, self::$response1->get(self::$parsedNumber)->getParsedNumber());
-        $this->assertEquals(self::$parsedNumber, self::$response1->get(self::$parsedNumber)->getParsedNumber());
-
-        $this->assertEquals(self::$originalNumber, self::$response1->get(self::$originalNumber)->getOriginalNumber());
-        $this->assertEquals(self::$originalNumber, self::$response1->get(self::$originalNumber)->getOriginalNumber());
-
-        $this->assertEquals(self::$originalNumber, self::$response1->get(self::$parsedNumber)->getOriginalNumber());
-        $this->assertEquals(self::$originalNumber, self::$response1->get(self::$parsedNumber)->getOriginalNumber());
+        $this->assertEquals(self::$originalNumber, self::$response3->get(self::$originalNumber)->getOriginalNumber());
+        $this->assertEquals(self::$originalNumber, self::$response3->get(self::$originalNumber)->getOriginalNumber());
     }
 
     public function testGettingRightError()
     {
-        $this->assertNull(self::$response1->getError());
-        $this->assertNull(self::$response1->first()->getError());
+        $this->assertNull(self::$response3->getError());
+        $this->assertNull(self::$response3->first()->getError());
     }
 
     public function testGettingRightCode()
     {
-        $this->assertEquals(self::$response1->first()->getCode(), ResponseCode::OK);
+        $this->assertEquals(self::$response3->first()->getCode(), ResponseCode::OK);
     }
 
     public function testUsernameIsString()
     {
-        $this->assertIsString(self::$response1->first()->getUserName());
+        $this->assertIsString(self::$response3->first()->getUserName());
     }
 
     public function testStatusCheckUrlIsString()
     {
-        $this->assertIsString(self::$response1->first()->getStatusCheckUrl());
+        $this->assertIsString(self::$response3->first()->getStatusCheckUrl());
     }
 
     public function testRawResponseIsString()
     {
-        $this->assertIsString(self::$response1->first()->getRawResponse());
+        $this->assertIsString(self::$response3->first()->getRawResponse());
     }
 
     public function testBatchNumberIsString()
     {
-        $this->assertIsString(self::$response1->first()->getBatchNumber());
+        $this->assertIsString(self::$response3->first()->getBatchNumber());
     }
 
     /**
@@ -118,13 +152,13 @@ class SmsTest extends TestCase
      */
     public function testGetOneSmsStatusWithGet()
     {
-        $status = (new SmsStatus())->of(self::$response1->first()->getBatchNumber())->get();
+        $status = (new SmsStatus())->of(self::$response3->first()->getBatchNumber())->get();
 
         var_dump($status->content());
-        $this->assertEquals(self::$response1->first()->getParsedNumber(), $status->recipient());
-        var_dump(self::$response1->first()->getMessage(), $status->text());
-        $this->assertEquals(self::$response1->first()->getSms(), $status->text());
-        $this->assertContains(self::$response1->first()->getCode(), ResponseCode::codes());
+        $this->assertEquals(self::$response3->first()->getParsedNumber(), $status->recipient());
+        var_dump(self::$response3->first()->getMessage(), $status->text());
+        $this->assertEquals(self::$response3->first()->getSms(), $status->text());
+        $this->assertContains(self::$response3->first()->getCode(), ResponseCode::codes());
     }
 
     /**
@@ -132,10 +166,10 @@ class SmsTest extends TestCase
      */
     public function testGetOneSmsStatusWithFirst()
     {
-        $status = (new SmsStatus())->of(self::$response1->first()->getBatchNumber())->first();
-        $this->assertEquals(self::$response1->first()->getParsedNumber(), $status->recipient());
-        $this->assertEquals(self::$response1->first()->getSms(), $status->text());
-        $this->assertContains(self::$response1->first()->getCode(), ResponseCode::codes());
+        $status = (new SmsStatus())->of(self::$response3->first()->getBatchNumber())->first();
+        $this->assertEquals(self::$response3->first()->getParsedNumber(), $status->recipient());
+        $this->assertEquals(self::$response3->first()->getSms(), $status->text());
+        $this->assertContains(self::$response3->first()->getCode(), ResponseCode::codes());
     }
 
     /**
@@ -143,10 +177,10 @@ class SmsTest extends TestCase
      */
     public function testGetOneSmsStatusWithLast()
     {
-        $status = (new SmsStatus())->of(self::$response1->first()->getBatchNumber())->last();
-        $this->assertEquals(self::$response1->first()->getParsedNumber(), $status->recipient());
-        $this->assertEquals(self::$response1->first()->getSms(), $status->text());
-        $this->assertContains(self::$response1->first()->getCode(), ResponseCode::codes());
+        $status = (new SmsStatus())->of(self::$response3->first()->getBatchNumber())->last();
+        $this->assertEquals(self::$response3->first()->getParsedNumber(), $status->recipient());
+        $this->assertEquals(self::$response3->first()->getSms(), $status->text());
+        $this->assertContains(self::$response3->first()->getCode(), ResponseCode::codes());
     }
 
     /**
@@ -155,13 +189,13 @@ class SmsTest extends TestCase
     public function testGetFirstSmsStatusFromTwo()
     {
         $status = (new SmsStatus())
-            ->of(self::$response1->first()->getBatchNumber())
-            ->of(self::$response2->first()->getBatchNumber())
+            ->of(self::$response3->first()->getBatchNumber())
+            ->of(self::$response2->getBatchNumber())
             ->first();
 
-        $this->assertEquals(self::$response1->first()->getParsedNumber(), $status->recipient());
-        $this->assertEquals(self::$response1->first()->getSms(), $status->text());
-        $this->assertContains(self::$response1->first()->getCode(), ResponseCode::codes());
+        $this->assertEquals(self::$response3->first()->getParsedNumber(), $status->recipient());
+        $this->assertEquals(self::$response3->first()->getSms(), $status->text());
+        $this->assertContains(self::$response3->first()->getCode(), ResponseCode::codes());
     }
 
     /**
@@ -170,13 +204,13 @@ class SmsTest extends TestCase
     public function testGetLastSmsStatusFromTwo()
     {
         $status = (new SmsStatus())
-            ->of(self::$response1->first()->getBatchNumber())
-            ->of(self::$response2->first()->getBatchNumber())
+            ->of(self::$response3->first()->getBatchNumber())
+            ->of(self::$response2->getBatchNumber())
             ->last();
 
-        $this->assertEquals(self::$response2->first()->getParsedNumber(), $status->recipient());
-        $this->assertEquals(self::$response2->first()->getSms(), $status->text());
-        $this->assertContains(self::$response2->first()->getCode(), ResponseCode::codes());
+        $this->assertEquals(self::$response2->getParsedNumber(), $status->recipient());
+        $this->assertEquals(self::$response2->getSms(), $status->text());
+        $this->assertContains(self::$response2->getCode(), ResponseCode::codes());
     }
 
     /**
@@ -185,13 +219,13 @@ class SmsTest extends TestCase
     public function testGetFirstSmsStatusFromTwoWithGet()
     {
         $status = (new SmsStatus())
-            ->of(self::$response1->first()->getBatchNumber())
-            ->of(self::$response2->first()->getBatchNumber())
-            ->get(self::$response1->first()->getBatchNumber());
+            ->of(self::$response3->first()->getBatchNumber())
+            ->of(self::$response2->getBatchNumber())
+            ->get(self::$response3->first()->getBatchNumber());
 
-        $this->assertEquals(self::$response1->first()->getParsedNumber(), $status->recipient());
-        $this->assertEquals(self::$response1->first()->getSms(), $status->text());
-        $this->assertContains(self::$response1->first()->getCode(), ResponseCode::codes());
+        $this->assertEquals(self::$response3->first()->getParsedNumber(), $status->recipient());
+        $this->assertEquals(self::$response3->first()->getSms(), $status->text());
+        $this->assertContains(self::$response3->first()->getCode(), ResponseCode::codes());
     }
 
     /**
@@ -200,12 +234,12 @@ class SmsTest extends TestCase
     public function testGeLastSmsStatusFromTwoWithGet()
     {
         $status = (new SmsStatus())
-            ->of(self::$response1->first()->getBatchNumber())
-            ->of(self::$response2->first()->getBatchNumber())
-            ->get(self::$response2->first()->getBatchNumber());
+            ->of(self::$response3->first()->getBatchNumber())
+            ->of(self::$response2->getBatchNumber())
+            ->get(self::$response2->getBatchNumber());
 
-        $this->assertEquals(self::$response2->first()->getParsedNumber(), $status->recipient());
-        $this->assertEquals(self::$response2->first()->getSms(), $status->text());
-        $this->assertContains(self::$response2->first()->getCode(), ResponseCode::codes());
+        $this->assertEquals(self::$response2->getParsedNumber(), $status->recipient());
+        $this->assertEquals(self::$response2->getSms(), $status->text());
+        $this->assertContains(self::$response2->getCode(), ResponseCode::codes());
     }
 }
