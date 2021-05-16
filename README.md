@@ -223,7 +223,7 @@ $sms = new Sms();
 
 $response = $sms->send('Hi', '233200000000'); // $response is an SmsResponse instance
 
-// If response received by TXTCONNECT
+// If request received by TXTCONNECT
 if ($response->isBeingProcessed()) {
     $batchNumber = $response->getBatchNumber();
     $statusCheckUrl = $response->getStatusCheckUrl();
@@ -236,6 +236,51 @@ if ($response->isBeingProcessed()) {
 
     // ...
 }
+```
+
+#### Multiple SMS response (SmsResponseBag)
+
+When sending SMS to multiple contacts, the `send` method will return an `SmsResponseBag` containing the `SmsResponse` of every contact:
+
+
+```php
+$sms = new Sms();
+
+$phone1 = '233200000000';
+$phone2 = '233210000001';
+$phone3 = '233220000002';
+
+$response = $sms->send('Hi', [$phone1, $phone2, $phone3]); // $response is a SmsResponseBag instance
+
+// Response for the first phone number
+$response1 = $response->get($phone1);
+
+if ($response1->isBeingProcessed()) {
+    $batchNumber = $response1->getBatchNumber();
+    $statusCheckUrl = $response1->getStatusCheckUrl();
+    $availableBalance = $response1->getBalance();
+
+    // ...
+} else {
+    $error =  $response1->getError();
+    $rawResponse - $response1->getRawResponse();
+
+    // ...
+}
+
+
+$response2 = $response->get($phone2);
+// ...
+
+$response3 = $response->get($phone3);
+//...
+```
+
+The first and last response can be accessed using the `first` and `last` method:
+
+```php
+$response1 = $response->first();
+$response3 = $response->last();
 ```
 
 ### Get SMS status
