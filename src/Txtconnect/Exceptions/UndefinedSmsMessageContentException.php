@@ -6,6 +6,6 @@ class UndefinedSmsMessageContentException extends \InvalidArgumentException
 {
     public function __construct($number, $key)
     {
-        parent::__construct('Key '.$key.' does not exist in content of inbox item number '.$number);
+        parent::__construct('Key '.$key.' does not exist in content of SmsMessage number #'.$number);
     }
 }
