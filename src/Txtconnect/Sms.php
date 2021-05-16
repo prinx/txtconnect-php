@@ -298,7 +298,7 @@ class Sms extends SmsAbstract
      *
      * @return $this
      */
-    public function alwaysSendAsBag(bool $sendAsBag = true)
+    public function asBag(bool $sendAsBag = true)
     {
         $this->sendAsBag = $sendAsBag;
 
