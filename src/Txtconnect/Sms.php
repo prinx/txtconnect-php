@@ -84,6 +84,11 @@ class Sms extends SmsAbstract
         $this->sent = [];
         $this->phones = [];
 
+        // If only one SMS sent, return directly the SmsResponse instead of a SmsResponseBag
+        if (count($this->sent) === 1) {
+            return current($smsResponses);
+        }
+
         return new SmsResponseBag($isBeingProcessed, $smsResponses, $numberMap);
     }
 
