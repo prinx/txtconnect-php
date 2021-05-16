@@ -27,7 +27,9 @@ class Sms extends SmsAbstract
     protected $removeDuplicate = true;
     protected $isUnicode = false;
     protected $sent = [];
+    protected $processed = [];
     protected $from = null;
+    protected $sendAsBag = false;
 
     /**
      * {@inheritdoc}
@@ -56,6 +58,7 @@ class Sms extends SmsAbstract
             if (in_array($parsed, self::UNSUPPORTED_NUMBERS, true)) {
                 $error = $this->getUnsupportedNumberError($parsed);
                 $smsResponses[$original] = new SmsResponse($error, $params['sms'], $original, $parsed);
+                $this->processed[$original] = $parsed;
                 continue;
             }
 
@@ -68,6 +71,7 @@ class Sms extends SmsAbstract
             $responses[] = $this->request(self::endpoint(), $options);
 
             $this->sent[$original] = $parsed;
+            $this->processed[$original] = $parsed;
         }
 
         $isBeingProcessed = false;
@@ -83,9 +87,10 @@ class Sms extends SmsAbstract
         // Reinit the Sms instance fot it to be able to receive other contacts to send SMS to.
         $this->sent = [];
         $this->phones = [];
+        $this->processed = [];
 
         // If only one SMS sent, return directly the SmsResponse instead of a SmsResponseBag
-        if (count($this->sent) === 1) {
+        if (!$this->sendAsBag && count($this->processed) === 1) {
             return current($smsResponses);
         }
 
@@ -280,6 +285,22 @@ class Sms extends SmsAbstract
     public function asPlainText()
     {
         $this->isUnicode = false;
+
+        return $this;
+    }
+
+    /**
+     * If `true`, will a single message sent will be treated as an Sms bag and will return a
+     * SmsResponseBag. Then you will need to access the SmsResponse via `$response->first()` or
+     * `$response->get($number)`.
+     * If `false`, an SMS sent to only one number will return a SmsResponse and an SMS sent to more 
+     * than one number will return a SmsResponseBag.
+     *
+     * @return $this
+     */
+    public function alwaysSendAsBag(bool $sendAsBag = true)
+    {
+        $this->sendAsBag = $sendAsBag;
 
         return $this;
     }
