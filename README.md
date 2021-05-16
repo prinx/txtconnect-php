@@ -70,7 +70,9 @@ Eg: +233 11 11 11 111
 
 In that case, the package will automatically determine the country of the number.
 
-If you don't have the number in international format, you can still send the SMS, just by setting the country yourself before calling the `send` method:
+### Specifying the default country
+
+Specifying the default country allows you to send SMS using numbers in the national format of that country. For example, after specifying the default country as Ghana, you can send SMS to numbers like 024 24 24 242, without putting them in international format.
 
 ```php
 $sms = new Sms;

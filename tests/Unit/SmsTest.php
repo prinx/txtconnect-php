@@ -237,7 +237,7 @@ class SmsTest extends TestCase
     /**
      * @vcr testGeLastSmsStatusFromTwoWithGet.json
      */
-    public function testGeLastSmsStatusFromTwoWithGet()
+    public function testGetLastSmsStatusFromTwoWithGet()
     {
         $status = (new SmsStatus())
             ->of(self::$response3->first()->getBatchNumber())
