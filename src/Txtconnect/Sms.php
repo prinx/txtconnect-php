@@ -5,9 +5,9 @@ namespace Prinx\Txtconnect;
 use Prinx\Txtconnect\Abstracts\SmsAbstract;
 use Prinx\Txtconnect\Exceptions\InvalidSenderNameException;
 use Prinx\Txtconnect\Lib\Endpoint;
+use Prinx\Txtconnect\Lib\PhoneNumberUtils;
 use Prinx\Txtconnect\Lib\SmsResponse;
 use Prinx\Txtconnect\Lib\SmsResponseBag;
-use Prinx\Txtconnect\Utils\PhoneNumberUtils;
 use function Prinx\Dotenv\env;
 use libphonenumber\NumberParseException;
 

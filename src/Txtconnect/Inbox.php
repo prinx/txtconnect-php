@@ -4,7 +4,7 @@ namespace Prinx\Txtconnect;
 
 use Prinx\Txtconnect\Abstracts\InboxAbstract;
 use Prinx\Txtconnect\Lib\Endpoint;
-use Prinx\Txtconnect\Utils\PhoneNumberUtils;
+use Prinx\Txtconnect\Lib\PhoneNumberUtils;
 use libphonenumber\NumberParseException;
 
 class Inbox extends InboxAbstract

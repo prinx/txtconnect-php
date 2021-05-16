@@ -1,6 +1,6 @@
 <?php
 
-namespace Prinx\Txtconnect\Utils;
+namespace Prinx\Txtconnect\Lib;
 
 use libphonenumber\NumberParseException;
 use libphonenumber\PhoneNumberFormat;
