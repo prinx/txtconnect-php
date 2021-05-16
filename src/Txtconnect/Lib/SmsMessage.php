@@ -15,6 +15,16 @@ class SmsMessage
     }
 
     /**
+     * Has sms been delivered successfully?
+     *
+     * @return bool
+     */
+    public function isDelivered()
+    {
+        return strtolower($this->status()) === 'message delivered successfully';
+    }
+
+    /**
      * @return int
      */
     public function id()
