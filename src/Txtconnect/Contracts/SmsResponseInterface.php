@@ -14,7 +14,7 @@ interface SmsResponseInterface
      *
      * @return bool
      */
-    public function isOk();
+    public function isBeingProcessed();
 
     /**
      * API code of the SmsResponse.
