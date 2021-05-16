@@ -148,6 +148,19 @@ class PhoneNumberUtils
     }
 
     /**
+     * Get number with the format +{countryCode}{Number} (Eg: +233545454545, for a Ghanian number).
+     * Alias for `formatE164($number, $region)`.
+     *
+     * @param string|\libphonenumber\PhoneNumber $number
+     *
+     * @return string The formatted number
+     */
+    public static function toInternational($number, string $region = null)
+    {
+        return self::formatE164($number, $region);
+    }
+
+    /**
      * libphonenumber\PhoneNumberUtil instance.
      *
      * Eg usage:
