@@ -210,6 +210,34 @@ $sms = new Sms();
 $response = $sms->asPlainText()->send('Hi', '233200000000');
 ```
 
+### SMS response
+
+After sending an SMS, the response let you know if the SMS has been received by TXTCONNECT or if an error happened.
+
+#### Single SMS response
+
+When sending an SMS to only one contact, the `send` method will return an `SmsResponse` instance:
+
+```php
+$sms = new Sms();
+
+$response = $sms->send('Hi', '233200000000'); // $response is an SmsResponse instance
+
+// If response received by TXTCONNECT
+if ($response->isBeingProcessed()) {
+    $batchNumber = $response->getBatchNumber();
+    $statusCheckUrl = $response->getStatusCheckUrl();
+    $availableBalance = $response->getBalance();
+
+    // ...
+} else {
+    $error =  $response->getError();
+    $rawResponse - $response->getRawResponse();
+
+    // ...
+}
+```
+
 ### Get SMS status
 
 ```php
