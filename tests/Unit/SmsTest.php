@@ -8,6 +8,7 @@ use Prinx\Txtconnect\Lib\SmsResponseBag;
 use Prinx\Txtconnect\Sms;
 use Prinx\Txtconnect\SmsStatus;
 use Tests\TestCase;
+use function Prinx\Dotenv\env;
 
 class SmsTest extends TestCase
 {
@@ -44,11 +45,11 @@ class SmsTest extends TestCase
     {
         self::$message = 'Hi';
         
-        self::$originalNumber = '233(0) 54 54-66-796';
-        self::$parsedNumber = '233545466796';
+        self::$originalNumber = env('TEST_PHONE1');
+        self::$parsedNumber = env('TEST_PHONE1_PARSED');
 
-        self::$originalNumber2 = ' 0 54 54-66-796';
-        self::$parsedNumber2 = '233545466796';
+        self::$originalNumber2 = env('TEST_PHONE2');
+        self::$parsedNumber2 = env('TEST_PHONE2_PARSED');
 
         self::$response1 = (new Sms())->send(self::$message, self::$originalNumber);
 
