@@ -46,6 +46,16 @@ abstract class SmsBagAbstract extends ApiAbstract
     }
 
     /**
+     * Return all items of the bag as arrays.
+     *
+     * @return array[]
+     */
+    public function toArray()
+    {
+        return $this->raw;
+    }
+
+    /**
      * Get first inbox item.
      *
      * @return SmsMessage
