@@ -112,9 +112,9 @@ class PhoneNumberUtils
      *
      * @return boolean
      */
-    public static function canReceiveVoice($number)
+    public static function canReceiveVoice($number, string $region = null)
     {
-        return static::getLib()->canBeInternationallyDialled(static::parse($number));
+        return static::getLib()->canBeInternationallyDialled(static::parse($number, $region));
     }
 
     /**
@@ -125,26 +125,26 @@ class PhoneNumberUtils
      *
      * @return boolean
      */
-    public static function canReceiveCall($number)
+    public static function canReceiveCall($number, string $region = null)
     {
-        return static::canReceiveVoice($number);
+        return static::canReceiveVoice($number, $region);
     }
 
-    public static function getCountryCode($number)
+    public static function getCountryCode($number, string $region = null)
     {
-        return static::parse($number)->getCountryCode();
+        return static::parse($number, $region)->getCountryCode();
     }
 
     /**
      * Get number with the format +{countryCode}{Number} (Eg: +233545454545, for a Ghanian number).
      *
-     * @param string $number
+     * @param string|\libphonenumber\PhoneNumber $number
      *
      * @return string The formatted number
      */
-    public static function formatE164($number)
+    public static function formatE164($number, string $region = null)
     {
-        return self::getLib()->format(static::parse($number), PhoneNumberFormat::E164);
+        return self::getLib()->format(static::parse($number, $region), PhoneNumberFormat::E164);
     }
 
     /**
