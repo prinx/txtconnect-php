@@ -78,21 +78,15 @@ abstract class SmsBagAbstract extends ApiAbstract
     /**
      * Get nth message item.
      *
-     * Returns the whole SmsBag if index is null.
-     *
-     * @param int|null $index Index of the SmsMessage to return.
+     * @param int $index Index of the SmsMessage to return.
      * @param string   $key   Key of the SmsMessage to return. If Not passed the whole nth SmsMessage is return
      *
      * @return SmsMessage[]|SmsMessage|array|mixed
      */
-    public function nth($index = null, $key = '')
+    public function nth(int $index, string $key = '')
     {
         if (is_null($this->raw)) {
             $this->fetch();
-        }
-
-        if (is_null($index)) {
-            return $this->raw;
         }
 
         if (!isset($this->raw[$index])) {
@@ -128,7 +122,7 @@ abstract class SmsBagAbstract extends ApiAbstract
      */
     public function count()
     {
-        return count($this->nth());
+        return count($this->raw);
     }
 
     public function isEmpty()
