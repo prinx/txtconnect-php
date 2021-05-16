@@ -50,11 +50,10 @@ class PhoneNumberUtils
      * Check a number is internationally valid, irrespective of the country.
      *
      * @param string|\libphonenumber\PhoneNumber $number
-     * @param string|null                        $region
      *
      * @return boolean
      */
-    public static function isValidNumber($number, $region = null)
+    public static function isValidNumber($number, string $region = null)
     {
         try {
             return static::getLib()->isValidNumber(static::parse($number, $region));
@@ -67,12 +66,11 @@ class PhoneNumberUtils
      * Make the number a phonenumber instance.
      * If no region is specified, the number must be in international format starting with '+'.
      *
-     * @param string      $number
-     * @param string|null $region
+     * @param string|\libphonenumber\PhoneNumber $number
      *
      * @return \libphonenumber\PhoneNumber
      */
-    public static function parse($number, $region = null)
+    public static function parse($number, string $region = null)
     {
         if (!$region && is_string($number)) {
             $number = static::ensurePlus($number);
@@ -91,12 +89,11 @@ class PhoneNumberUtils
     /**
      * Check if a phone number can receive SMS.
      *
-     * @param string      $number
-     * @param string|null $region
+     * @param string|\libphonenumber\PhoneNumber $number
      *
      * @return boolean
      */
-    public static function canReceiveSms($number, $region = null)
+    public static function canReceiveSms($number, string $region = null)
     {
         $number = static::parse($number, $region);
 
@@ -108,7 +105,7 @@ class PhoneNumberUtils
     /**
      * Check if a phone number can receive an international call.
      *
-     * @param string $number
+     * @param string|\libphonenumber\PhoneNumber $number
      *
      * @return boolean
      */
@@ -121,7 +118,7 @@ class PhoneNumberUtils
      * Check if a phone number can receive an international call.
      * Alias for `canReceiveVoice`.
      *
-     * @param string $number
+     * @param string|\libphonenumber\PhoneNumber $number
      *
      * @return boolean
      */
@@ -130,6 +127,14 @@ class PhoneNumberUtils
         return static::canReceiveVoice($number, $region);
     }
 
+    /**
+     * Get country code of this phone number.
+     *
+     * @param string|\libphonenumber\PhoneNumber $number
+     * @param string                             $region
+     *
+     * @return int|null The country code, or null if not set.
+     */
     public static function getCountryCode($number, string $region = null)
     {
         return static::parse($number, $region)->getCountryCode();
