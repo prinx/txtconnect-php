@@ -34,7 +34,7 @@ class Sms extends SmsAbstract
     /**
      * {@inheritdoc}
      */
-    public function send($sms, $phone = null, string $method = 'POST'): SmsResponseBagInterface
+    public function send($sms, $phone = null, string $method = 'POST')
     {
         if ($phone) {
             $this->to($phone);

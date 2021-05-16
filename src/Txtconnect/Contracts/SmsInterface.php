@@ -11,7 +11,7 @@ interface SmsInterface extends ApiInterface
      * @param string[]|string $phone  A single number as string or an array of numbers.
      * @param string          $method GET|POST
      *
-     * @return SmsResponseBagInterface
+     * @return SmsResponseInterface|SmsResponseBagInterface
      */
-    public function send($sms, $phone = null, string $method = 'POST'): SmsResponseBagInterface;
+    public function send($sms, $phone = null, string $method = 'POST');
 }
