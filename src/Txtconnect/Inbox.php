@@ -4,7 +4,7 @@ namespace Prinx\Txtconnect;
 
 use Prinx\Txtconnect\Abstracts\InboxAbstract;
 use Prinx\Txtconnect\Lib\Endpoint;
-use Prinx\Txtconnect\Lib\PhoneNumberUtils;
+use Prinx\Txtconnect\Lib\PhoneNumber;
 use libphonenumber\NumberParseException;
 
 class Inbox extends InboxAbstract
@@ -29,20 +29,20 @@ class Inbox extends InboxAbstract
     public function formatPhoneNumber($number)
     {
         try {
-            $number = PhoneNumberUtils::parse($number, $this->defaultCountry);
+            $number = PhoneNumber::parse($number, $this->defaultCountry);
         } catch (NumberParseException $th) {
             return Sms::INVALID_NUMBER;
         }
 
-        if (!PhoneNumberUtils::isValidNumber($number)) {
+        if (!PhoneNumber::isValidNumber($number)) {
             return Sms::INVALID_NUMBER;
         }
 
-        if (!PhoneNumberUtils::canReceiveSms($number)) {
+        if (!PhoneNumber::canReceiveSms($number)) {
             return Sms::CANNOT_RECEIVE_SMS;
         }
 
-        return PhoneNumberUtils::removePlus(PhoneNumberUtils::formatE164($number));
+        return PhoneNumber::removePlus(PhoneNumber::formatE164($number));
     }
 
     /**

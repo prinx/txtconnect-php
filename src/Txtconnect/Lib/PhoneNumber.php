@@ -7,7 +7,7 @@ use libphonenumber\PhoneNumberFormat;
 use libphonenumber\PhoneNumberType;
 use libphonenumber\PhoneNumberUtil;
 
-class PhoneNumberUtils
+class PhoneNumber
 {
     const CONTACT_STRING_SEPERATOR = ',';
     const SMS = 'sms';

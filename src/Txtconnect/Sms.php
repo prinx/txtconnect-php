@@ -5,7 +5,7 @@ namespace Prinx\Txtconnect;
 use Prinx\Txtconnect\Abstracts\SmsAbstract;
 use Prinx\Txtconnect\Exceptions\InvalidSenderNameException;
 use Prinx\Txtconnect\Lib\Endpoint;
-use Prinx\Txtconnect\Lib\PhoneNumberUtils;
+use Prinx\Txtconnect\Lib\PhoneNumber;
 use Prinx\Txtconnect\Lib\SmsResponse;
 use Prinx\Txtconnect\Lib\SmsResponseBag;
 use function Prinx\Dotenv\env;
@@ -247,24 +247,24 @@ class Sms extends SmsAbstract
 
         $parsed = array_map(function ($phone) {
             try {
-                $phone = PhoneNumberUtils::parse($phone, $this->defaultCountry);
+                $phone = PhoneNumber::parse($phone, $this->defaultCountry);
             } catch (NumberParseException $th) {
                 return self::INVALID_NUMBER;
             }
 
-            if (!PhoneNumberUtils::isValidNumber($phone)) {
+            if (!PhoneNumber::isValidNumber($phone)) {
                 return self::INVALID_NUMBER;
             }
 
-            if (!PhoneNumberUtils::canReceiveSms($phone)) {
+            if (!PhoneNumber::canReceiveSms($phone)) {
                 return self::CANNOT_RECEIVE_SMS;
             }
 
-            return PhoneNumberUtils::removePlus(PhoneNumberUtils::formatE164($phone));
+            return PhoneNumber::removePlus(PhoneNumber::formatE164($phone));
         }, $originalNumbers);
 
         // Duplication is handled when sending the request.
-        $parsed = PhoneNumberUtils::purify($parsed, false, false);
+        $parsed = PhoneNumber::purify($parsed, false, false);
 
         return array_combine($originalNumbers, $parsed);
     }
