@@ -129,12 +129,6 @@ class SmsResponseBag extends SmsResponseBagAbstract
             return $this->responses[$number];
         }
 
-        $originalNumber = array_search($number, $this->numberMap, true);
-
-        if ($originalNumber !== false) {
-            return $this->responses[$originalNumber];
-        }
-
         throw new SmsResponseNotFoundException($number);
     }
 
