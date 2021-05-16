@@ -80,6 +80,99 @@ $sms = new Sms;
 $response = $sms->country('GH')->send($message, $phone);
 ```
 
+### Get SMS status
+
+```php
+require 'path/to/vendor/autoload.php'; // Not needed if using the package inside a framework.
+
+use Prinx\Txtconnect\SmsStatus;
+
+$status = new SmsStatus();
+$sms = $status->of($batchNumber)->get(); // Return an instance of SmsMessage
+
+$isDelivered = $sms->isDelivered(); // Returns true if SMS has been delivered to recipient.
+```
+
+#### Get Status of many SMS at a go
+
+```php
+require 'path/to/vendor/autoload.php'; // Not needed if using the package inside a framework.
+
+use Prinx\Txtconnect\SmsStatus;
+
+$status = new SmsStatus();
+
+$status->of([$batchNumber1, $batchNumber2, $batchNumber3]);
+
+$sms1 = $status->get($batchNumber1);
+$sms1IsDelivered = $sms1->isDelivered();
+
+$sms2 = $status->get($batchNumber2);
+$sms2IsDelivered = $sms2->isDelivered();
+
+$sms3 = $status->get($batchNumber3);
+$sms3IsDelivered = $sms3->isDelivered();
+```
+
+##### Adding batch number one by one
+
+Batch numbers can be added one by one instead of passing all as an array to the `of` method:
+
+```php
+$status = new SmsStatus();
+
+$status->of($batchNumber1);
+$status->of($batchNumber2);
+$status->of($batchNumber3);
+```
+
+##### Fluent interface
+
+The `SmsStatus` class implement a fluent interface, so the `of` method can be chained:
+
+```php
+$status = new SmsStatus();
+
+$status->of($batchNumber1)
+    ->of($batchNumber2)
+    ->of($batchNumber3);
+```
+
+##### Using `first` and `last`
+
+The `SmsStatus` class also extends the SmsBagAbstract, so when retrieveing statuses of more than one batch numbers, the first and last elements can be retrieved using the `first` and `last` method:
+
+```php
+$status = new SmsStatus();
+
+$status->of($batchNumber1)
+    ->of($batchNumber2)
+    ->of($batchNumber3);
+
+$sms1 = $status->first();
+$isSms1Delivered = $sms1->isDelivered();
+
+$sms2 = $status->get($batchNumber2);
+$isSms2Delivered = $sms2->isDelivered();
+
+$sms3 = $status->last();
+$isSms3Delivered = $sms3->isDelivered();
+```
+
+##### All the statuses fetched
+
+```php
+$allFetchedStatuses = $status->all(); // Array of SmsMessage
+
+$allFetchedStatusesAsArray = $status->toArray();
+```
+
+##### Count number of statuses fetched
+
+```php
+$numberOfStatusesFetched = $status->count();
+```
+
 ### Get Balance
 
 ```php
