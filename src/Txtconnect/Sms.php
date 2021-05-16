@@ -75,10 +75,14 @@ class Sms extends SmsAbstract
         foreach ($this->client()->stream($responses) as $response => $chunk) {
             if ($chunk->isLast()) {
                 [$originalNumber, $parsedNumber] = $response->getInfo('user_data');
-                $smsResponses[$originalNumber] = new SmsResponse($response, $params['sms'],  $originalNumber, $parsedNumber);
+                $smsResponses[$originalNumber] = new SmsResponse($response, $params['sms'], $originalNumber, $parsedNumber);
                 $isBeingProcessed = true;
             }
         }
+
+        // Reinit the Sms instance fot it to be able to receive other contacts to send SMS to.
+        $this->sent = [];
+        $this->phones = [];
 
         return new SmsResponseBag($isBeingProcessed, $smsResponses, $numberMap);
     }
