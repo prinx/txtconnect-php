@@ -144,39 +144,7 @@ $response = $sms->to('233200000000')
 
 #### Handling duplicate
 
-By default, the package handles automatically duplicate numbers and does not send sms to duplicate numbers (unless you explicitly activate sending to duplicate).
-
-##### Sending to duplicate
-
-If you wish to send sms to duplicate numbers, you can activate it by calling the `keepDuplicate` method on the sms instance.
-
-```php
-$sms = new Sms();
-
-$sms->to('233200000000');
-$sms->to('233200000000');
-$sms->to('233220000002');
-
-$message = 'Hi';
-
-$response = $sms->keepDuplicate()->send($message); // Sends to the first number twice then the third number.
-```
-
-##### Deactivate sending to duplicate
-
-If you wish to send sms to duplicate numbers, you can activate it by calling the `removeDuplicate` method on the sms instance.
-
-```php
-$sms = new Sms();
-
-$sms->to('233200000000');
-$sms->to('233200000000');
-$sms->to('233220000002');
-
-$message = 'Hi';
-
-$response = $sms->removeDuplicate()->send($message); // Sends to only two
-```
+By default, the package handles automatically duplicate numbers and does not send sms to duplicate numbers.
 
 #### Invalid numbers
 
@@ -190,7 +158,7 @@ Invalid numbers are:
 
 This allows you not to waste bandwidth to make HTTP request to numbers that will not get the message you are sending and at the same time allows not to waste you TXTCONNECT balance.
 
-#### Send SMS as unicode
+<!-- #### Send SMS as unicode
 
 If the SMS contains UTF8 special characters, you can activate support for UTF8:
 
@@ -208,7 +176,7 @@ You can deactivate sending as unicode by calling:
 $sms = new Sms();
 
 $response = $sms->asPlainText()->send('Hi', '233200000000');
-```
+``` -->
 
 ### SMS response
 
@@ -267,7 +235,6 @@ if ($response1->isBeingProcessed()) {
 
     // ...
 }
-
 
 $response2 = $response->get($phone2);
 // ...

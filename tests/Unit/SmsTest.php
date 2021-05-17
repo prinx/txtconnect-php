@@ -56,7 +56,7 @@ class SmsTest extends TestCase
         self::$originalNumber2 = env('TEST_PHONE2');
         self::$parsedNumber2 = env('TEST_PHONE2_PARSED');
 
-        self::$response5 = (new Sms())->asUnicode()->send('Hi 😄', self::$originalNumber);
+        // self::$response5 = (new Sms())->asUnicode()->send('Hi 😄', self::$originalNumber);
 
         self::$response1 = (new Sms())->send(self::$message, self::$originalNumber);
 
@@ -71,7 +71,7 @@ class SmsTest extends TestCase
 
     public function testReturnProperResponse()
     {
-        $this->assertInstanceOf(SmsResponse::class, self::$response5, 'Response 5 must be an instance of SmsResponse');
+        // $this->assertInstanceOf(SmsResponse::class, self::$response5, 'Response 5 must be an instance of SmsResponse');
         $this->assertInstanceOf(SmsResponse::class, self::$response1, 'Response 1 must be an instance of SmsResponse');
         $this->assertInstanceOf(SmsResponse::class, self::$response2, 'Response 2 must be an instance of SmsResponse');
         $this->assertInstanceOf(SmsResponseBag::class, self::$response3, 'Response 3 must be an instance of SmsResponseBag');
@@ -80,7 +80,7 @@ class SmsTest extends TestCase
 
     public function testCanSendSuccessfullySms()
     {
-        $this->assertTrue(self::$response5->isBeingProcessed());
+        // $this->assertTrue(self::$response5->isBeingProcessed());
         $this->assertTrue(self::$response1->isBeingProcessed());
         $this->assertTrue(self::$response2->isBeingProcessed());
         $this->assertTrue(self::$response3->isBeingProcessed());
