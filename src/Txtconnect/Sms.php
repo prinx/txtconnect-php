@@ -2,13 +2,13 @@
 
 namespace Prinx\Txtconnect;
 
+use function Prinx\Dotenv\env;
 use Prinx\Txtconnect\Abstracts\SmsAbstract;
 use Prinx\Txtconnect\Exceptions\InvalidSenderNameException;
 use Prinx\Txtconnect\Lib\Endpoint;
 use Prinx\Txtconnect\Lib\PhoneNumber;
 use Prinx\Txtconnect\Lib\SmsResponse;
 use Prinx\Txtconnect\Lib\SmsResponseBag;
-use function Prinx\Dotenv\env;
 
 class Sms extends SmsAbstract
 {
@@ -68,7 +68,7 @@ class Sms extends SmsAbstract
             $responses[] = $this->request(self::endpoint(), $options);
 
             $this->processed[$key] = $parsed;
-            ++$this->trulySentCount;
+            $this->trulySentCount++;
 
             $error = 'No response received from TXTCONNECT.';
         }
@@ -113,8 +113,8 @@ class Sms extends SmsAbstract
     private function prepareParams($sms = '')
     {
         $smsParams = [
-            'from' => $this->getFrom(),
-            'sms' => $this->getSmsString($sms),
+            'from'    => $this->getFrom(),
+            'sms'     => $this->getSmsString($sms),
             'unicode' => intval($this->getIsUnicode()),
         ];
 
@@ -144,9 +144,9 @@ class Sms extends SmsAbstract
     /**
      * Get Sender name that will appear on receiver's phone.
      *
-     * @return string
-     *
      * @throws InvalidSenderNameException
+     *
+     * @return string
      */
     public function getFrom()
     {
@@ -164,9 +164,9 @@ class Sms extends SmsAbstract
      *
      * @param string[]|string|stringable $sms
      *
-     * @return string
-     *
      * @throws \InvalidArgumentException
+     *
+     * @return string
      */
     public function getSmsString($sms)
     {

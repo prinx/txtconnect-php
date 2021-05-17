@@ -2,11 +2,11 @@
 
 namespace Prinx\Txtconnect\Abstracts;
 
+use function Prinx\Dotenv\env;
 use Prinx\Txtconnect\Contracts\ApiInterface;
 use Prinx\Txtconnect\Exceptions\InvalidApiKeyException;
 use Prinx\Txtconnect\Exceptions\InvalidHttpMethodException;
 use Symfony\Component\HttpClient\HttpClient;
-use function Prinx\Dotenv\env;
 
 abstract class ApiAbstract implements ApiInterface
 {
@@ -32,9 +32,9 @@ abstract class ApiAbstract implements ApiInterface
     /**
      * Set the HTTP method to use for the API request.
      *
-     * @return $this
-     *
      * @throws InvalidHttpMethodException
+     *
+     * @return $this
      */
     public function via(string $method)
     {
@@ -87,7 +87,7 @@ abstract class ApiAbstract implements ApiInterface
     public function defaultParams()
     {
         return [
-            'api_key' => $this->getApiKey(),
+            'api_key'  => $this->getApiKey(),
             'response' => 'json',
         ];
     }
@@ -107,9 +107,9 @@ abstract class ApiAbstract implements ApiInterface
     /**
      * Get Api Key.
      *
-     * @return string
-     *
      * @throws InvalidApiKeyException
+     *
+     * @return string
      */
     public function getApiKey()
     {

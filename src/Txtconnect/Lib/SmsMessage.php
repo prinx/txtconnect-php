@@ -120,9 +120,9 @@ class SmsMessage
      *
      * @param string $key
      *
-     * @return array|mixed
-     *
      * @throws UndefinedSmsMessageContentException
+     *
+     * @return array|mixed
      */
     public function content($key = '')
     {

@@ -79,9 +79,9 @@ abstract class SmsBagAbstract extends ApiAbstract
      *
      * @param int $index Index of the SmsMessage to return.
      *
-     * @return SmsMessage
-     *
      * @throws UndefinedSmsMessageException If index not in the bag.
+     *
+     * @return SmsMessage
      */
     public function nth(int $index)
     {

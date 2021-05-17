@@ -83,7 +83,7 @@ class PhoneNumber
      *
      * @param string|\libphonenumber\PhoneNumber $number
      *
-     * @return boolean
+     * @return bool
      */
     public static function isValidNumber($number, string $region = null)
     {
@@ -123,7 +123,7 @@ class PhoneNumber
      *
      * @param string|\libphonenumber\PhoneNumber $number
      *
-     * @return boolean
+     * @return bool
      */
     public static function canReceiveSms($number, string $region = null)
     {
@@ -139,7 +139,7 @@ class PhoneNumber
      *
      * @param string|\libphonenumber\PhoneNumber $number
      *
-     * @return boolean
+     * @return bool
      */
     public static function canReceiveVoice($number, string $region = null)
     {
@@ -152,7 +152,7 @@ class PhoneNumber
      *
      * @param string|\libphonenumber\PhoneNumber $number
      *
-     * @return boolean
+     * @return bool
      */
     public static function canReceiveCall($number, string $region = null)
     {

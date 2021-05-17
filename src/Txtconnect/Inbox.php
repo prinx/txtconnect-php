@@ -5,7 +5,6 @@ namespace Prinx\Txtconnect;
 use Prinx\Txtconnect\Abstracts\InboxAbstract;
 use Prinx\Txtconnect\Lib\Endpoint;
 use Prinx\Txtconnect\Lib\PhoneNumber;
-use libphonenumber\NumberParseException;
 
 class Inbox extends InboxAbstract
 {
@@ -28,7 +27,6 @@ class Inbox extends InboxAbstract
 
     public function formatPhoneNumber($number)
     {
-        
     }
 
     /**

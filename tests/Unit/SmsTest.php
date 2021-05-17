@@ -2,13 +2,13 @@
 
 namespace Tests\Unit;
 
+use function Prinx\Dotenv\env;
 use Prinx\Txtconnect\Lib\ResponseCode;
 use Prinx\Txtconnect\Lib\SmsResponse;
 use Prinx\Txtconnect\Lib\SmsResponseBag;
 use Prinx\Txtconnect\Sms;
 use Prinx\Txtconnect\SmsStatus;
 use Tests\TestCase;
-use function Prinx\Dotenv\env;
 
 class SmsTest extends TestCase
 {
@@ -49,7 +49,7 @@ class SmsTest extends TestCase
     public static function setUpBeforeClass(): void
     {
         self::$message = 'Hi';
-        
+
         self::$originalNumber = env('TEST_PHONE1');
         self::$parsedNumber = env('TEST_PHONE1_PARSED');
 
@@ -61,7 +61,7 @@ class SmsTest extends TestCase
         self::$response1 = (new Sms())->send(self::$message, self::$originalNumber);
 
         self::$response2 = (new Sms())->to(self::$originalNumber)->send(self::$message);
-        
+
         self::$response3 = (new Sms())->country('GH')
         ->keepDuplicate()
         ->send(self::$message, [self::$originalNumber, self::$originalNumber2]);
