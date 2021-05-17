@@ -1,4 +1,4 @@
-<p align="center"><img src="https://www.txtconnect.net/assets/TXT connect2/TXT connect2/txt connect2_RGB.png" width="400"></p>
+<p align="center"><a href="https://txtconnect.net"><img src="https://www.txtconnect.net/assets/TXT connect2/TXT connect2/txt connect2_RGB.png" width="400"></a></p>
 
 <p align="center">
 <a href="https://travis-ci.org/prinx/txtconnect-php"><img src="https://travis-ci.com/prinx/txtconnect-php.svg?branch=main" alt="Build Status"></a>
