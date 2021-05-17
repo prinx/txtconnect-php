@@ -18,7 +18,7 @@ class SmsResponseBag extends SmsResponseBagAbstract
     protected $isBeingProcessed = false;
 
     /**
-     * @var array<string,SmsResponse>
+     * @var SmsResponse[]
      */
     protected $responses = [];
 
@@ -32,16 +32,16 @@ class SmsResponseBag extends SmsResponseBagAbstract
     /**
      * Original numbers.
      *
-     * @var array
+     * @var string[]
      */
     protected $originalNumbers;
 
     /**
-     * Map of original numbers to parsed numbers.
+     * Parsed numbers.
      *
-     * @var array<string,string>
+     * @var string[]
      */
-    protected $numberMap = [];
+    protected $parsedNumbers;
 
     /**
      * Number of SmsResponse in the bag.
@@ -49,6 +49,13 @@ class SmsResponseBag extends SmsResponseBagAbstract
      * @var int
      */
     protected $count;
+
+    /**
+     * Number of SMS truly sent to TXTCONNECT.
+     *
+     * @var int
+     */
+    protected $trulySentCount;
 
     /**
      * @var \Prinx\Txtconnect\SmsResponse
@@ -61,16 +68,19 @@ class SmsResponseBag extends SmsResponseBagAbstract
     protected $last;
 
     /**
-     * @param array  $isBeingProcessed Has SMS reached TxtConnect?
-     * @param array  $responses        Responses and info on the request
-     * @param array  $numberMap        original numbers mapped to parsed numbers
-     * @param string $error            original numbers mapped to parsed numbers
+     * @param bool          $isBeingProcessed Has SMS reached TxtConnect?
+     * @param SmsResponse[] $responses        Responses and info on the request
+     * @param string[]      $originalNumbers  Original numbers
+     * @param string[]      $parsedNumbers    Parsed numbers
+     * @param string|null   $error            Error
      */
-    public function __construct(bool $isBeingProcessed, array $responses, array $numberMap, $error = null)
+    public function __construct(bool $isBeingProcessed, array $responses, array $originalNumbers, array $parsedNumbers, int $trulySentCount, $error = null)
     {
         $this->isBeingProcessed = $isBeingProcessed;
         $this->responses = $responses;
-        $this->numberMap = $numberMap;
+        $this->originalNumbers = $originalNumbers;var_dump($originalNumbers);
+        $this->parsedNumbers = $parsedNumbers;
+        $this->trulySentCount = $trulySentCount;
         $this->error = $error;
     }
 
@@ -91,13 +101,11 @@ class SmsResponseBag extends SmsResponseBagAbstract
             return $this->first;
         }
 
-        $numbers = $this->originalNumbers();
-
-        if (!isset($numbers[0])) {
+        if (!isset($this->originalNumbers[0])) {
             throw new SmsResponseNotFoundException();
         }
 
-        return $this->first = $this->get($numbers[0]);
+        return $this->first = $this->responses[0];
     }
 
     /**
@@ -109,15 +117,11 @@ class SmsResponseBag extends SmsResponseBagAbstract
             return $this->last;
         }
 
-        $count = $this->count();
-
-        if (!$count) {
+        if (!isset($this->originalNumbers[0])) {
             throw new SmsResponseNotFoundException();
         }
 
-        $number = $this->originalNumbers()[$count - 1];
-
-        return $this->last = $this->get($number);
+        return $this->last = $this->responses[$this->count() - 1];
     }
 
     /**
@@ -125,11 +129,13 @@ class SmsResponseBag extends SmsResponseBagAbstract
      */
     public function get(string $number)
     {
-        if (isset($this->responses[$number])) {
-            return $this->responses[$number];
+        $index = array_search($number, $this->originalNumbers, true);
+
+        if ($index === false) {
+            throw new SmsResponseNotFoundException($number);
         }
 
-        throw new SmsResponseNotFoundException($number);
+        return $this->responses[$index];
     }
 
     /**
@@ -143,21 +149,17 @@ class SmsResponseBag extends SmsResponseBagAbstract
     /**
      * {@inheritdoc}
      */
-    public function numbers()
+    public function originalNumbers()
     {
-        return $this->numberMap;
+        return $this->originalNumbers;
     }
 
     /**
      * {@inheritdoc}
      */
-    public function originalNumbers()
+    public function parsedNumbers()
     {
-        if (is_null($this->originalNumbers)) {
-            $this->originalNumbers = array_keys($this->numberMap);
-        }
-
-        return $this->originalNumbers;
+        return $this->parsedNumbers;
     }
 
     /**
@@ -174,9 +176,17 @@ class SmsResponseBag extends SmsResponseBagAbstract
     public function count()
     {
         if (is_null($this->count)) {
-            $this->count = count($this->numberMap);
+            $this->count = count($this->originalNumbers);
         }
 
         return $this->count;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function trulySentCount()
+    {
+        return $this->trulySentCount;
     }
 }

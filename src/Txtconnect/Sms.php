@@ -17,10 +17,10 @@ class Sms extends SmsAbstract
     protected $phones = [];
     protected $removeDuplicate = true;
     protected $isUnicode = false;
-    protected $sent = [];
     protected $processed = [];
     protected $from = null;
     protected $sendAsBag = false;
+    protected $trulySentCount = 0;
 
     /**
      * {@inheritdoc}
@@ -33,7 +33,7 @@ class Sms extends SmsAbstract
 
         $this->via($method);
 
-        $numberMap = $this->mapOriginalNumbersToParsed();
+        $parsedNumbers = $this->getParsedNumbers();
         $params = $this->prepareParams($sms);
 
         $smsResponses = [];
@@ -43,16 +43,19 @@ class Sms extends SmsAbstract
         $isBeingProcessed = false;
         $error = 'Request not sent to TXTCONNECT. Check individual SmsResponse for detail error(s)';
 
-        foreach ($numberMap as $original => $parsed) {
-            if ($this->removeDuplicate && $mainDuplicate = array_search($parsed, $this->sent)) {
-                $smsResponses[$original] = $smsResponses[$mainDuplicate];
+        foreach ($this->phones as $key => $original) {
+            $parsed = $parsedNumbers[$key];
+
+            if ($this->removeDuplicate && $index = array_search($parsed, $this->processed, true)) {
+                $smsResponses[] = $smsResponses[$index];
+                $this->processed[$key] = $parsed;
                 continue;
             }
 
             if (in_array($parsed, PhoneNumber::UNSUPPORTED_NUMBERS, true)) {
                 $error = $this->getUnsupportedNumberError($parsed);
-                $smsResponses[$original] = new SmsResponse($error, $params['sms'], $original, $parsed);
-                $this->processed[$original] = $parsed;
+                $smsResponses[] = new SmsResponse($error, $params['sms'], $original, $parsed);
+                $this->processed[$key] = $parsed;
                 continue;
             }
 
@@ -64,8 +67,8 @@ class Sms extends SmsAbstract
 
             $responses[] = $this->request(self::endpoint(), $options);
 
-            $this->sent[$original] = $parsed;
-            $this->processed[$original] = $parsed;
+            $this->processed[$key] = $parsed;
+            ++$this->trulySentCount;
 
             $error = 'No response received from TXTCONNECT.';
         }
@@ -73,28 +76,29 @@ class Sms extends SmsAbstract
         foreach ($this->client()->stream($responses) as $response => $chunk) {
             if ($chunk->isLast()) {
                 [$originalNumber, $parsedNumber] = $response->getInfo('user_data');
-                $smsResponses[$originalNumber] = new SmsResponse($response, $params['sms'], $originalNumber, $parsedNumber);
+                $smsResponses[] = new SmsResponse($response, $params['sms'], $originalNumber, $parsedNumber);
                 $isBeingProcessed = true;
                 $error = null;
             }
         }
 
         // If only one SMS sent, return directly the SmsResponse instead of a SmsResponseBag
-        if (!$this->sendAsBag && count($this->processed) === 1) {
+        if (!$this->sendAsBag && $this->trulySentCount === 1) {
             $this->reInit();
 
             return current($smsResponses);
         }
 
+        $bag = new SmsResponseBag($isBeingProcessed, $smsResponses, $this->phones, $parsedNumbers, $this->trulySentCount, $error);
+
         $this->reInit();
 
-        return new SmsResponseBag($isBeingProcessed, $smsResponses, $numberMap, $error);
+        return $bag;
     }
 
     public function reInit()
     {
         // Reinit the Sms instance fot it to be able to receive other contacts to send SMS to.
-        $this->sent = [];
         $this->phones = [];
         $this->processed = [];
     }
@@ -237,7 +241,7 @@ class Sms extends SmsAbstract
         return $this->phones;
     }
 
-    public function mapOriginalNumbersToParsed()
+    public function getParsedNumbers()
     {
         $originalNumbers = $this->phones;
 
@@ -248,7 +252,7 @@ class Sms extends SmsAbstract
         // Duplication is handled when sending the request.
         $parsed = PhoneNumber::purify($parsed, false, false);
 
-        return array_combine($originalNumbers, $parsed);
+        return $parsed;
     }
 
     /**

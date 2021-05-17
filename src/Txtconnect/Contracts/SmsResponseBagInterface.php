@@ -41,21 +41,21 @@ interface SmsResponseBagInterface
     /**
      * Responses.
      *
-     * @return array
+     * @return \Prinx\Txtconnect\Contracts\SmsResponseInterface[]
      */
     public function getResponses();
 
     /**
-     * Map of original numbers to parsed numbers.
+     * Parsed numbers.
      *
-     * @return array
+     * @return string[]
      */
-    public function numbers();
+    public function parsedNumbers();
 
     /**
      * Original numbers the developer sent the SMS to.
      *
-     * @return array
+     * @return string[]
      */
     public function originalNumbers();
 
@@ -72,4 +72,11 @@ interface SmsResponseBagInterface
      * @return int
      */
     public function count();
+
+    /**
+     * Number of SMS truly forwarded to TXTCONNECT.
+     *
+     * @return int
+     */
+    public function trulySentCount();
 }
