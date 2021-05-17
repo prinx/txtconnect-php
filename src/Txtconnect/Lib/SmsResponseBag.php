@@ -78,7 +78,7 @@ class SmsResponseBag extends SmsResponseBagAbstract
     {
         $this->isBeingProcessed = $isBeingProcessed;
         $this->responses = $responses;
-        $this->originalNumbers = $originalNumbers;var_dump($originalNumbers);
+        $this->originalNumbers = $originalNumbers;
         $this->parsedNumbers = $parsedNumbers;
         $this->trulySentCount = $trulySentCount;
         $this->error = $error;
