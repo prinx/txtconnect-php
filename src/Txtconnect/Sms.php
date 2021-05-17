@@ -2,13 +2,13 @@
 
 namespace Prinx\Txtconnect;
 
-use function Prinx\Dotenv\env;
 use Prinx\Txtconnect\Abstracts\SmsAbstract;
 use Prinx\Txtconnect\Exceptions\InvalidSenderNameException;
 use Prinx\Txtconnect\Lib\Endpoint;
 use Prinx\Txtconnect\Lib\PhoneNumber;
 use Prinx\Txtconnect\Lib\SmsResponse;
 use Prinx\Txtconnect\Lib\SmsResponseBag;
+use function Prinx\Dotenv\env;
 
 class Sms extends SmsAbstract
 {
@@ -47,14 +47,14 @@ class Sms extends SmsAbstract
             $parsed = $parsedNumbers[$key];
 
             if ($this->removeDuplicate && $index = array_search($parsed, $this->processed, true)) {
-                $smsResponses[] = $smsResponses[$index];
+                $smsResponses[$key] = $smsResponses[$index];
                 $this->processed[$key] = $parsed;
                 continue;
             }
 
             if (in_array($parsed, PhoneNumber::UNSUPPORTED_NUMBERS, true)) {
                 $error = $this->getUnsupportedNumberError($parsed);
-                $smsResponses[] = new SmsResponse($error, $params['sms'], $original, $parsed);
+                $smsResponses[$key] = new SmsResponse($error, $params['sms'], $original, $parsed);
                 $this->processed[$key] = $parsed;
                 continue;
             }
@@ -62,21 +62,21 @@ class Sms extends SmsAbstract
             $params['to'] = $parsed;
             $options = [
                 $paramsType => $params,
-                'user_data' => [$original, $parsed],
+                'user_data' => [$key, $original, $parsed],
             ];
 
             $responses[] = $this->request(self::endpoint(), $options);
 
             $this->processed[$key] = $parsed;
-            $this->trulySentCount++;
+            ++$this->trulySentCount;
 
             $error = 'No response received from TXTCONNECT.';
         }
 
         foreach ($this->client()->stream($responses) as $response => $chunk) {
             if ($chunk->isLast()) {
-                [$originalNumber, $parsedNumber] = $response->getInfo('user_data');
-                $smsResponses[] = new SmsResponse($response, $params['sms'], $originalNumber, $parsedNumber);
+                [$key, $originalNumber, $parsedNumber] = $response->getInfo('user_data');
+                $smsResponses[$key] = new SmsResponse($response, $params['sms'], $originalNumber, $parsedNumber);
                 $isBeingProcessed = true;
                 $error = null;
             }
@@ -113,8 +113,8 @@ class Sms extends SmsAbstract
     private function prepareParams($sms = '')
     {
         $smsParams = [
-            'from'    => $this->getFrom(),
-            'sms'     => $this->getSmsString($sms),
+            'from' => $this->getFrom(),
+            'sms' => $this->getSmsString($sms),
             'unicode' => intval($this->getIsUnicode()),
         ];
 
