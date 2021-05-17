@@ -13,9 +13,9 @@ TXTCONNECT is a platform that allows you to send SMS and voice messages to your 
 
 This package provides a convenient way of interacting with TXTCONNECT's API. It allows you to send SMS, check your SMS status, get your SMS inbox, check your account balance, without worrying about direct API calls.
 
-- Create your TXTCONNECT account [here](https://txtconnect.net/signup).
-- Then request for a sender ID
-- and generate an API key.
+- Create your TXTCONNECT account [here](https://txtconnect.net/signup);
+- Then request for a [sender ID](https://txtconnect.net/customers/sender-ids-management);
+- And generate an [API key](https://txtconnect.net/customers/campaigns-api/sms/user-sms-api-info).
 
 Then you are ready to go.
 
