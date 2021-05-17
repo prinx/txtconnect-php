@@ -1,10 +1,14 @@
 # TXTCONNECT PHP SDK
 
-## WORK IN PROGRESS
+TXTCONNECT is a platform that allows you to send SMS and voice messages to your specified contact list.
 
-> txt connect SMS API provides convenient way to send single SMS, check balance status,delivery status and also fetch all SMS inbox.
->
-> To start integrating with txt connect, you need to create an [account](https://txtconnect.net/signup). If an account is created and successfully logged in,you then have to [request for sender_id](https://txtconnect.net/customers/sender-ids-management) and [generate SMS API](https://txtconnect.net/customers/campaigns-api/sms/user-sms-api-info) key which can be Updated.
+This package provides a convenient way of interacting with TXTCONNECT's API. It allows you to send SMS, check your SMS status, get your SMS inbox, check your account balance, without worrying about direct API calls.
+
+- Create your TXTCONNECT account [here](https://txtconnect.net/signup).
+- Then request for a sender ID
+- and generate an API key.
+
+Then you are ready to go.
 
 ## Installation
 
