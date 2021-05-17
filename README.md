@@ -1,7 +1,7 @@
 <p align="center"><a href="https://txtconnect.net"><img src="https://www.txtconnect.net/assets/TXT connect2/TXT connect2/txt connect2_RGB.png" width="400"></a></p>
 
 <p align="center">
-<a href="https://travis-ci.org/prinx/txtconnect-php"><img src="https://travis-ci.com/prinx/txtconnect-php.svg?branch=main" alt="Build Status"></a>
+<a href="https://travis-ci.com/prinx/txtconnect-php"><img src="https://travis-ci.com/prinx/txtconnect-php.svg?branch=main" alt="Build Status"></a>
 <a href="https://packagist.org/packages/prinx/txtconnect"><img src="https://poser.pugx.org/prinx/txtconnect/v/stable.svg" alt="Latest Stable Version"></a>
 <a href="https://packagist.org/packages/prinx/txtconnect"><img src="https://poser.pugx.org/prinx/txtconnect/license.svg" alt="License"></a>
 <a href="https://github.styleci.io/repos/362527144?branch=main"><img src="https://github.styleci.io/repos/362527144/shield?style=flat&branch=main" alt="StyleCI"></a>
