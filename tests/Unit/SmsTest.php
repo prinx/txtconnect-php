@@ -2,13 +2,13 @@
 
 namespace Tests\Unit;
 
-use function Prinx\Dotenv\env;
 use Prinx\Txtconnect\Lib\ResponseCode;
 use Prinx\Txtconnect\Lib\SmsResponse;
 use Prinx\Txtconnect\Lib\SmsResponseBag;
 use Prinx\Txtconnect\Sms;
 use Prinx\Txtconnect\SmsStatus;
 use Tests\TestCase;
+use function Prinx\Dotenv\env;
 
 class SmsTest extends TestCase
 {
@@ -69,7 +69,6 @@ class SmsTest extends TestCase
         // self::$response5 = (new Sms())->asUnicode()->send('Hi 😄', self::$originalNumber);
 
         self::$response1 = (new Sms())->send(self::$message, self::$originalNumber);
-        var_dump(self::$response1);
 
         self::$response2 = (new Sms())->to(self::$originalNumber)->send(self::$message);
 
