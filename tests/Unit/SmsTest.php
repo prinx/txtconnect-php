@@ -2,13 +2,13 @@
 
 namespace Tests\Unit;
 
+use function Prinx\Dotenv\env;
 use Prinx\Txtconnect\Lib\ResponseCode;
 use Prinx\Txtconnect\Lib\SmsResponse;
 use Prinx\Txtconnect\Lib\SmsResponseBag;
 use Prinx\Txtconnect\Sms;
 use Prinx\Txtconnect\SmsStatus;
 use Tests\TestCase;
-use function Prinx\Dotenv\env;
 
 class SmsTest extends TestCase
 {
