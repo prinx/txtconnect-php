@@ -144,7 +144,39 @@ $response = $sms->to('233200000000')
 
 #### Handling duplicate
 
-By default, the package handles automatically duplicate numbers and does not send sms to duplicate numbers.
+By default, the package handles automatically duplicate numbers and does not send sms to duplicate numbers (unless it is explicitly activated).
+
+##### Sending to duplicate
+
+If you wish to send sms to duplicate numbers, you can activate it by calling the `keepDuplicate` method on the sms instance.
+
+```php
+$sms = new Sms();
+
+$sms->to('233200000000');
+$sms->to('233200000000');
+$sms->to('233220000002');
+
+$message = 'Hi';
+
+$response = $sms->keepDuplicate()->send($message); // Sends to the first number twice then the third number.
+```
+
+##### Deactivate sending to duplicate
+
+If you wish to send sms to duplicate numbers, you can activate it by calling the `removeDuplicate` method on the sms instance.
+
+```php
+$sms = new Sms();
+
+$sms->to('233200000000');
+$sms->to('233200000000');
+$sms->to('233220000002');
+
+$message = 'Hi';
+
+$response = $sms->removeDuplicate()->send($message); // Sends to only two
+```
 
 #### Invalid numbers
 
