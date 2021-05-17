@@ -44,7 +44,7 @@ class Balance extends BalanceAbstract
 
     public function getOrRefresh($key = '')
     {
-        if (empty($this->payload) || !$this->false) {
+        if (empty($this->payload) || !$this->fetched) {
             $this->fetch();
         }
 
