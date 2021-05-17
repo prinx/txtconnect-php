@@ -441,7 +441,10 @@ $inbox->refresh(); // Prepare the inbox to be refetched.
 
 ## Contributing
 
-Give a :star: to the repo it's free :smile:.
+- Give a :star: to the repo, it's free :grin:
+- Fork the repo;
+- correct a bug, add a feature;
+- and create a pull request.
 
 ## License
 
