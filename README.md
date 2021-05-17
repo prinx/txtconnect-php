@@ -439,6 +439,10 @@ $sms = $inbox->nth(2); // Return the second SmsMessage of the inbox
 $inbox->refresh(); // Prepare the inbox to be refetched.
 ```
 
+## Contributing
+
+Give a :star: to the repo it's free :smile:.
+
 ## License
 
 [MIT](LICENSE)
