@@ -14,8 +14,8 @@
         "phpunit/phpunit": "^9.5",
         "nunomaduro/collision": "^5.4",
         "damianopetrungaro/php-commitizen": "^0.2.0",
-        "php-vcr/php-vcr": "^1.5",
-        "php-vcr/phpunit-testlistener-vcr": "^3.2"
+        "covergenius/php-vcr": "^1.7",
+        "covergenius/phpunit-testlistener-vcr": "^3.3"
     },
     "license": "MIT",
     "authors": [
