@@ -2,6 +2,6 @@
 
 namespace Prinx\Txtconnect\Exceptions;
 
-class InvalidSenderNameException extends \InvalidArgumentException
+class InvalidHttpMethodException extends \InvalidArgumentException
 {
 }

@@ -2,6 +2,6 @@
 
 namespace Prinx\Txtconnect\Exceptions;
 
-class InvalidHttpMethodException extends \InvalidArgumentException
+class InvalidApiKeyException extends \InvalidArgumentException
 {
 }

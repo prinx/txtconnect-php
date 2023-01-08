@@ -2,6 +2,6 @@
 
 namespace Prinx\Txtconnect\Exceptions;
 
-class InvalidApiKeyException extends \InvalidArgumentException
+class InvalidSenderNameException extends \InvalidArgumentException
 {
 }
