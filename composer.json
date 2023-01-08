@@ -4,16 +4,15 @@
     "type": "library",
     "require": {
         "giggsey/libphonenumber-for-php": "^8.12",
-        "symfony/http-client": "^5.2",
-        "league/iso3166": "^3.0",
+        "symfony/http-client": "^6.1",
+        "league/iso3166": "^4.1",
         "prinx/notify": "^0.1",
-        "prinx/slack-log": "^1.2",
+        "prinx/slack-log": "^2.0",
         "prinx/dotenv": "^1.0"
     },
     "require-dev": {
         "phpunit/phpunit": "^9.5",
-        "nunomaduro/collision": "^5.4",
-        "damianopetrungaro/php-commitizen": "^0.2.0",
+        "nunomaduro/collision": "^6.1",
         "covergenius/php-vcr": "^1.7",
         "covergenius/phpunit-testlistener-vcr": "^3.3"
     },
@@ -24,7 +23,8 @@
             "email": "princedorcis@gmail.com"
         }
     ],
-    "minimum-stability": "stable",
+    "minimum-stability": "dev",
+    "prefer-stable": true,
     "autoload": {
         "psr-4": {
             "Prinx\\Txtconnect\\": "src/"
